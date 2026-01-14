@@ -144,7 +144,7 @@
     </div>
 
     <div class="footer-note">
-      This is a sample tool. Extend the question bank to cover all WJEC Intermediate Tier topics.
+      This is a growing question bank. Next goal: make Number fully exam-complete for WJEC GCSE Intermediate Tier.
     </div>
   </div>
 
@@ -170,6 +170,21 @@
         options: shuffled,
         correctIndex: shuffled.findIndex(v => v === String(correctText))
       };
+    }
+
+    function gcd(a, b) {
+      a = Math.abs(a); b = Math.abs(b);
+      while (b !== 0) {
+        const t = b;
+        b = a % b;
+        a = t;
+      }
+      return a;
+    }
+
+    function simplifyFraction(n, d) {
+      const g = gcd(n, d);
+      return { n: n / g, d: d / g };
     }
 
     // ---------- Existing templates ----------
@@ -356,7 +371,7 @@
       };
     }
 
-    // ---------- NEW: Phase 1 (Number) — 8 templates ----------
+    // ---------- Number templates (existing Phase 1) ----------
     function makePercentOfAmountQuestion() {
       const base = randInt(6, 60) * 5;
       const percentChoices = [5, 10, 12, 15, 20, 25, 30, 35, 40, 45];
@@ -544,7 +559,7 @@
 
       const wrong1 = ((a + b) * inner) / e;
       const wrong2 = (a + b * inner) / e;
-      const wrong3 = a + b * inner / e + 1; // nudge to avoid duplicates
+      const wrong3 = a + b * inner / e + 1;
 
       const { options, correctIndex } = buildMCQOptions(correctText, [
         Number.isInteger(wrong1) ? String(wrong1) : wrong1.toFixed(2),
@@ -667,25 +682,240 @@
       };
     }
 
+    // ---------- NEW: Fractions & Percentages expansion (exam-complete) ----------
+    function makePercentageDecreaseQuestion() {
+      const original = randInt(20, 120);
+      const percentChoices = [5, 10, 12, 15, 20, 25, 30];
+      const p = percentChoices[randInt(0, percentChoices.length - 1)];
+      const decrease = original * (p / 100);
+      const newVal = original - decrease;
+
+      const correctText = `£${newVal.toFixed(2)}`;
+      const { options, correctIndex } = buildMCQOptions(correctText, [
+        `£${(original + decrease).toFixed(2)}`,         // increased instead
+        `£${(original - p).toFixed(2)}`,                // subtract p as amount
+        `£${(original * (p / 100)).toFixed(2)}`         // gave the decrease only
+      ]);
+
+      const solution =
+        `Decrease = ${p}% of ${original} = ${p}/100 × ${original} = £${decrease.toFixed(2)}\n` +
+        `New amount = £${original.toFixed(2)} - £${decrease.toFixed(2)} = £${newVal.toFixed(2)}`;
+
+      return {
+        topic: "Number",
+        skill: "Percentage decrease",
+        difficulty: "Foundation / Core",
+        question: `A price is reduced from £${original.toFixed(2)} by ${p}%. What is the new price?`,
+        options,
+        correctIndex,
+        solution
+      };
+    }
+
+    function makeReversePercentageQuestion() {
+      // Choose a nice original and a percent increase OR decrease, then ask for original.
+      const isIncrease = Math.random() < 0.6;
+      const percentChoices = [5, 10, 12, 15, 20, 25];
+      const p = percentChoices[randInt(0, percentChoices.length - 1)];
+
+      const original = randInt(40, 200);
+      const multiplier = isIncrease ? (1 + p / 100) : (1 - p / 100);
+      const finalVal = original * multiplier;
+
+      const correct = original;
+      const correctText = `£${correct.toFixed(2)}`;
+
+      // Common errors
+      const wrong1 = isIncrease
+        ? (finalVal * (1 - p/100))              // tried to “undo” by subtracting %
+        : (finalVal * (1 + p/100));             // tried to “undo” by adding %
+      const wrong2 = isIncrease
+        ? (finalVal / (p/100))                  // divided by p not by multiplier
+        : (finalVal / (p/100));
+      const wrong3 = isIncrease
+        ? (finalVal / (1 - p/100))              // used wrong multiplier
+        : (finalVal / (1 + p/100));             // used wrong multiplier
+
+      const { options, correctIndex } = buildMCQOptions(correctText, [
+        `£${wrong1.toFixed(2)}`,
+        `£${wrong2.toFixed(2)}`,
+        `£${wrong3.toFixed(2)}`
+      ]);
+
+      const changeWord = isIncrease ? "increased" : "decreased";
+      const solution =
+        `Final amount = original × ${multiplier.toFixed(2)}\n` +
+        `So original = final ÷ ${multiplier.toFixed(2)}\n` +
+        `= £${finalVal.toFixed(2)} ÷ ${multiplier.toFixed(2)} = £${correct.toFixed(2)}`;
+
+      return {
+        topic: "Number",
+        skill: "Reverse percentage",
+        difficulty: "Core / Intermediate",
+        question: `A value is ${changeWord} by ${p}% to £${finalVal.toFixed(2)}. What was the original value?`,
+        options,
+        correctIndex,
+        solution
+      };
+    }
+
+    function makeFractionOfAmountQuestion() {
+      // Choose a friendly fraction and ensure divisible
+      const fracs = [
+        {n: 1, d: 2}, {n: 1, d: 3}, {n: 2, d: 3}, {n: 1, d: 4},
+        {n: 3, d: 4}, {n: 2, d: 5}, {n: 3, d: 5}
+      ];
+      const f = fracs[randInt(0, fracs.length - 1)];
+
+      const k = randInt(6, 40);
+      const amount = f.d * k; // divisible by denominator
+      const correct = (f.n / f.d) * amount;
+
+      const correctText = String(correct);
+      const { options, correctIndex } = buildMCQOptions(correctText, [
+        String(amount / f.d),               // forgot numerator
+        String(amount * f.n),               // multiplied by numerator only
+        String(amount / f.n)                // inverted
+      ]);
+
+      const solution =
+        `${f.n}/${f.d} of ${amount} = (${f.n} × ${amount}) ÷ ${f.d}\n` +
+        `= ${f.n * amount} ÷ ${f.d} = ${correct}`;
+
+      return {
+        topic: "Number",
+        skill: "Fraction of an amount",
+        difficulty: "Foundation / Core",
+        question: `Find ${f.n}/${f.d} of ${amount}.`,
+        options,
+        correctIndex,
+        solution
+      };
+    }
+
+    function makeFractionCalculationQuestion() {
+      // Add or subtract two fractions (with manageable denominators)
+      const d1 = [4,5,6,8,10,12][randInt(0, 5)];
+      const d2 = [3,4,5,6,8,10,12][randInt(0, 6)];
+      const n1 = randInt(1, d1 - 1);
+      const n2 = randInt(1, d2 - 1);
+      const op = Math.random() < 0.5 ? "+" : "-";
+
+      // Compute result using common denominator
+      const common = d1 * d2;
+      const a = n1 * d2;
+      const b = n2 * d1;
+      const resN = op === "+" ? (a + b) : (a - b);
+      const resD = common;
+
+      const simp = simplifyFraction(resN, resD);
+      const correctText = `${simp.n}/${simp.d}`;
+
+      // Distractors
+      const wrong1 = `${Math.max(1, n1 + (op === "+" ? n2 : -n2))}/${Math.max(1, d1 + d2)}`; // add tops & bottoms
+      const wrong2 = `${resN}/${resD}`; // unsimplified (may equal correct if gcd=1 but that's fine—avoid duplicates)
+      const wrong3 = `${(op === "+" ? (n1 + n2) : (n1 - n2))}/${d1}`; // treated as same denominator
+
+      // Ensure distractors are distinct strings
+      const dists = Array.from(new Set([wrong1, wrong2, wrong3].filter(v => v !== correctText)));
+      while (dists.length < 3) dists.push(`${randInt(1,9)}/${randInt(2,12)}`);
+
+      const { options, correctIndex } = buildMCQOptions(correctText, dists.slice(0, 3));
+
+      const solution =
+        `${n1}/${d1} ${op} ${n2}/${d2}\n` +
+        `Common denominator = ${d1} × ${d2} = ${common}\n` +
+        `${n1}/${d1} = ${a}/${common}\n` +
+        `${n2}/${d2} = ${b}/${common}\n` +
+        `So = (${a} ${op} ${b})/${common} = ${resN}/${common}\n` +
+        `Simplify: ${resN}/${common} = ${simp.n}/${simp.d}`;
+
+      return {
+        topic: "Number",
+        skill: "Fraction calculations",
+        difficulty: "Core / Intermediate",
+        question: `Work out: ${n1}/${d1} ${op} ${n2}/${d2} (give your answer in simplest form).`,
+        options,
+        correctIndex,
+        solution
+      };
+    }
+
+    function makeFDPConversionQuestion() {
+      // Choose a fraction that has a terminating decimal, then ask for decimal or percent.
+      const candidates = [
+        {n:1,d:2},{n:1,d:4},{n:3,d:4},{n:1,d:5},{n:2,d:5},{n:3,d:5},{n:4,d:5},
+        {n:1,d:8},{n:3,d:8},{n:5,d:8},{n:7,d:8},{n:1,d:10},{n:3,d:10},{n:7,d:10}
+      ];
+      const f = candidates[randInt(0, candidates.length - 1)];
+      const mode = Math.random() < 0.5 ? "decimal" : "percent";
+
+      const value = f.n / f.d;
+      const dec = Number(value.toFixed(3)).toString().replace(/\.0+$/,"").replace(/(\.\d*[1-9])0+$/,"$1");
+      const pct = (value * 100);
+      const pctText = `${Number(pct.toFixed(1)).toString().replace(/\.0$/,"")}%`;
+
+      let question, correctText, distractors, solution;
+
+      if (mode === "decimal") {
+        correctText = dec;
+        distractors = [
+          (f.d / f.n).toString(),                        // inverted
+          Number((value * 10).toFixed(3)).toString(),    // ×10 error
+          Number((value / 10).toFixed(3)).toString()     // ÷10 error
+        ];
+        question = `Convert ${f.n}/${f.d} to a decimal.`;
+        solution = `${f.n}/${f.d} = ${f.n} ÷ ${f.d} = ${dec}`;
+      } else {
+        correctText = pctText;
+        distractors = [
+          `${Number((pct / 10).toFixed(1)).toString().replace(/\.0$/,"")}%`, // ÷10 error
+          `${Number((pct * 10).toFixed(1)).toString().replace(/\.0$/,"")}%`, // ×10 error
+          `${Number((pct + 10).toFixed(1)).toString().replace(/\.0$/,"")}%`  // +10% error
+        ];
+        question = `Convert ${f.n}/${f.d} to a percentage.`;
+        solution = `${f.n}/${f.d} = ${dec}\nPercentage = ${dec} × 100 = ${pctText}`;
+      }
+
+      const { options, correctIndex } = buildMCQOptions(correctText, distractors);
+
+      return {
+        topic: "Number",
+        skill: "Fraction / decimal / percentage conversion",
+        difficulty: "Foundation / Core",
+        question,
+        options,
+        correctIndex,
+        solution
+      };
+    }
+
     // ---------- Question bank registry ----------
     const questionBank = [
-      // Existing
-      makePercentageIncreaseQuestion,
-      makeRatioShareQuestion,
+      // Existing cross-topic examples
       makeLinearEquationQuestion,
       makeRectangleAreaQuestion,
       makePythagorasQuestion,
       makeMeanQuestion,
 
-      // Phase 1 (Number) — 8 new templates
+      // Number (existing)
+      makePercentageIncreaseQuestion,
       makePercentOfAmountQuestion,
+      makeRatioShareQuestion,
       makeDirectProportionQuestion,
       makeRoundingQuestion,
       makeStandardFormQuestion,
       makePowersRootsQuestion,
       makeBIDMASQuestion,
       makeNegativeNumbersQuestion,
-      makeEstimationQuestion
+      makeEstimationQuestion,
+
+      // New Fractions & Percentages expansion
+      makePercentageDecreaseQuestion,
+      makeReversePercentageQuestion,
+      makeFractionOfAmountQuestion,
+      makeFractionCalculationQuestion,
+      makeFDPConversionQuestion
     ];
 
     // ---------- App wiring ----------
