@@ -4,113 +4,30 @@
   <meta charset="UTF-8" />
   <title>Mr Nathan's GCSE Maths Question Bank</title>
   <style>
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f5f7fb;
-    }
-    .container {
-      max-width: 900px;
-      margin: 40px auto;
-      background: #ffffff;
-      padding: 24px 28px;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    }
-    h1 {
-      margin-top: 0;
-      font-size: 1.6rem;
-      color: #134b9b;
-    }
-    .subtitle {
-      color: #555;
-      margin-bottom: 16px;
-      font-size: 0.95rem;
-    }
-    .controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 16px;
-      align-items: center;
-    }
-    select, button {
-      padding: 8px 12px;
-      font-size: 0.95rem;
-      border-radius: 4px;
-      border: 1px solid #c5cbe0;
-      background: #ffffff;
-      cursor: pointer;
-    }
-    button {
-      background: #134b9b;
-      color: #fff;
-      border: none;
-    }
-    button:hover {
-      background: #0f3f84;
-    }
-    .meta {
-      font-size: 0.9rem;
-      color: #666;
-      margin-bottom: 8px;
-    }
-    .question-text {
-      font-size: 1.05rem;
-      margin: 12px 0 16px;
-      white-space: pre-wrap;
-    }
-    .options {
-      list-style: none;
-      padding: 0;
-      margin: 0 0 16px;
-    }
-    .options li {
-      margin-bottom: 6px;
-    }
-    .option-label {
-      display: inline-block;
-      width: 20px;
-      font-weight: bold;
-    }
-    .solution {
-      border-top: 1px solid #dde3f5;
-      margin-top: 12px;
-      padding-top: 12px;
-      display: none;
-      font-size: 0.95rem;
-    }
-    .solution pre {
-      margin: 0;
-      white-space: pre-wrap;
-      font-family: inherit;
-    }
-    .difficulty {
-      font-weight: bold;
-    }
-    .footer-note {
-      margin-top: 20px;
-      font-size: 0.8rem;
-      color: #999;
-    }
-    .pill {
-      display: inline-block;
-      padding: 2px 8px;
-      border-radius: 999px;
-      background: #e7eefe;
-      color: #134b9b;
-      font-size: 0.75rem;
-      margin-right: 6px;
-    }
+    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; margin: 0; padding: 0; background: #f5f7fb; }
+    .container { max-width: 900px; margin: 40px auto; background: #ffffff; padding: 24px 28px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+    h1 { margin-top: 0; font-size: 1.6rem; color: #134b9b; }
+    .subtitle { color: #555; margin-bottom: 16px; font-size: 0.95rem; }
+    .controls { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; align-items: center; }
+    select, button { padding: 8px 12px; font-size: 0.95rem; border-radius: 4px; border: 1px solid #c5cbe0; background: #ffffff; cursor: pointer; }
+    button { background: #134b9b; color: #fff; border: none; }
+    button:hover { background: #0f3f84; }
+    .meta { font-size: 0.9rem; color: #666; margin-bottom: 8px; }
+    .question-text { font-size: 1.05rem; margin: 12px 0 16px; white-space: pre-wrap; }
+    .options { list-style: none; padding: 0; margin: 0 0 16px; }
+    .options li { margin-bottom: 6px; }
+    .option-label { display: inline-block; width: 20px; font-weight: bold; }
+    .solution { border-top: 1px solid #dde3f5; margin-top: 12px; padding-top: 12px; display: none; font-size: 0.95rem; }
+    .solution pre { margin: 0; white-space: pre-wrap; font-family: inherit; }
+    .difficulty { font-weight: bold; }
+    .footer-note { margin-top: 20px; font-size: 0.8rem; color: #999; }
+    .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; background: #e7eefe; color: #134b9b; font-size: 0.75rem; margin-right: 6px; }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Mr Nathan's GCSE Maths Question Bank</h1>
-    <div class="subtitle">
-      Intermediate Tier • Random, regeneratable MCQs with full worked solutions.
-    </div>
+    <div class="subtitle">Intermediate Tier • Random, regeneratable MCQs with full worked solutions.</div>
 
     <div class="controls">
       <label for="topicSelect">Topic:</label>
@@ -132,10 +49,7 @@
       <span class="difficulty">Difficulty: <span id="difficultyText"></span></span>
     </div>
 
-    <div class="question-text" id="questionText">
-      Click “New Question” to begin.
-    </div>
-
+    <div class="question-text" id="questionText">Click “New Question” to begin.</div>
     <ul class="options" id="optionsList"></ul>
 
     <div class="solution" id="solutionBlock">
@@ -143,16 +57,12 @@
       <pre id="solutionText"></pre>
     </div>
 
-    <div class="footer-note">
-      This is a growing question bank. Next goal: make Number fully exam-complete for WJEC GCSE Intermediate Tier.
-    </div>
+    <div class="footer-note">This is a growing question bank. Next goal: make Number fully exam-complete for WJEC GCSE Intermediate Tier.</div>
   </div>
 
   <script>
     // ---------- Utilities ----------
-    function randInt(min, max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
+    function randInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 
     function shuffleArray(arr) {
       const copy = arr.slice();
@@ -166,19 +76,12 @@
     function buildMCQOptions(correctText, distractorTexts) {
       const all = [String(correctText), ...distractorTexts.map(String)];
       const shuffled = shuffleArray(all);
-      return {
-        options: shuffled,
-        correctIndex: shuffled.findIndex(v => v === String(correctText))
-      };
+      return { options: shuffled, correctIndex: shuffled.findIndex(v => v === String(correctText)) };
     }
 
     function gcd(a, b) {
       a = Math.abs(a); b = Math.abs(b);
-      while (b !== 0) {
-        const t = b;
-        b = a % b;
-        a = t;
-      }
+      while (b !== 0) { const t = b; b = a % b; a = t; }
       return a;
     }
 
@@ -187,42 +90,67 @@
       return { n: n / g, d: d / g };
     }
 
-    // GCSE-friendly decimal formatter for numbers of the form (coeffStr × 10^power)
-    // Example: coeffStr="1.6", power=-4 -> "0.00016" (NEVER "1.6e-4")
+    // ---------- GCSE formatting helpers ----------
+    function stripTrailingZeros(numStr) {
+      // "21.0" -> "21", "2.10" -> "2.1"
+      if (!numStr.includes(".")) return numStr;
+      return numStr.replace(/\.0+$/, "").replace(/(\.\d*[1-9])0+$/, "$1");
+    }
+
+    function tenPowerHTML(power) {
+      return `10<sup>${power}</sup>`;
+    }
+
+    function normaliseSci(coeff, power) {
+      // Ensure 1 ≤ coeff < 10 (GCSE standard form)
+      let c = coeff;
+      let p = power;
+
+      // Guard against tiny floating noise:
+      const EPS = 1e-12;
+
+      while (c >= 10 - EPS) { c /= 10; p += 1; }
+      while (c < 1 - EPS) { c *= 10; p -= 1; }
+
+      // Round coefficient to a sensible dp for display (1 dp matches how we generate)
+      // Avoid 9.999999 -> 10.0 after rounding:
+      c = Math.round(c * 10) / 10;
+      if (c >= 10) { c /= 10; p += 1; }
+
+      return { coeff: c, power: p };
+    }
+
+    function sciHTML(coeff, power) {
+      const norm = normaliseSci(coeff, power);
+      const cStr = stripTrailingZeros(norm.coeff.toFixed(1));
+      return `${cStr} × ${tenPowerHTML(norm.power)}`;
+    }
+
+    // Convert a (coeff, power) into a plain decimal string WITHOUT e-notation
     function coeffPowerToPlainDecimal(coeffStr, power) {
-      // Remove decimal point but remember how many digits were before it
       const dotIndex = coeffStr.indexOf(".");
       const digitsBeforeDot = (dotIndex === -1) ? coeffStr.length : dotIndex;
       const digitsOnly = coeffStr.replace(".", ""); // e.g. "1.6" -> "16"
       const totalDigits = digitsOnly.length;
 
-      // The decimal point in the digits-only number is after digitsBeforeDot
-      // Multiplying by 10^power shifts that point right (power positive) or left (power negative)
-      const newDecimalPos = digitsBeforeDot + power; // position in digitsOnly where decimal point should go
+      const newDecimalPos = digitsBeforeDot + power;
 
-      // If decimal point ends up at or beyond the end -> integer with zeros
       if (newDecimalPos >= totalDigits) {
         const zeros = "0".repeat(newDecimalPos - totalDigits);
         return digitsOnly + zeros;
       }
-
-      // If decimal point ends up before the start -> 0.00...digits
       if (newDecimalPos <= 0) {
         const zeros = "0".repeat(-newDecimalPos);
-        // Keep all digits; allow trailing zeros if they arise naturally from coeff
         return "0." + zeros + digitsOnly;
       }
 
-      // Otherwise it sits inside the digits
       const left = digitsOnly.slice(0, newDecimalPos);
       const right = digitsOnly.slice(newDecimalPos);
-
-      // Remove unnecessary trailing zeros in the decimal part for student-friendliness
       const rightTrimmed = right.replace(/0+$/, "");
       return rightTrimmed.length ? (left + "." + rightTrimmed) : left;
     }
 
-    // ---------- Existing templates ----------
+    // ---------- Templates ----------
     function makePercentageIncreaseQuestion() {
       const originalPrice = randInt(20, 80);
       const percentChoices = [5, 8, 10, 12, 15, 20];
@@ -244,22 +172,15 @@
         `Increase = ${percent}% of ${originalPrice} = ${percent}/100 × ${originalPrice} = £${increase.toFixed(2)}\n` +
         `New price = £${originalPrice.toFixed(2)} + £${increase.toFixed(2)} = £${newPrice.toFixed(2)}`;
 
-      return {
-        topic: "Number",
-        skill: "Percentage increase",
-        difficulty: "Foundation / Core",
-        question: `A coat originally costs £${originalPrice.toFixed(2)}. Its price is increased by ${percent}%. What is the new price?`,
-        options: answers,
-        correctIndex,
-        solution
-      };
+      return { topic: "Number", skill: "Percentage increase", difficulty: "Foundation / Core",
+        questionHTML: `A coat originally costs £${originalPrice.toFixed(2)}. Its price is increased by ${percent}%. What is the new price?`,
+        optionsHTML: answers, correctIndex, solutionHTML: solution };
     }
 
     function makeRatioShareQuestion() {
       const a = randInt(1, 5);
       const b = randInt(1, 5);
       const sumParts = a + b;
-
       const k = randInt(5, 20);
       const total = sumParts * k;
 
@@ -279,157 +200,9 @@
         `One part = £${total} ÷ ${sumParts} = £${(total / sumParts).toFixed(2)}\n` +
         `First share = ${a} parts = £${shareA.toFixed(2)}`;
 
-      return {
-        topic: "Number",
-        skill: "Sharing in a ratio",
-        difficulty: "Core / Intermediate",
-        question: `£${total} is shared in the ratio ${a}:${b}. How much does the first person receive?`,
-        options,
-        correctIndex,
-        solution
-      };
-    }
-
-    function makeLinearEquationQuestion() {
-      const a = randInt(2, 9);
-      const x = randInt(-5, 8);
-      const b = randInt(-10, 12);
-      const c = a * x + b;
-
-      const correct = x;
-      const wrong1 = (c - b) / (a + 1);
-      const wrong2 = c - b;
-      const wrong3 = (c + b) / a;
-
-      const { options, correctIndex } = buildMCQOptions(String(correct), [
-        String(Math.round(wrong1)),
-        String(wrong2),
-        String(Math.round(wrong3))
-      ]);
-
-      const solution =
-        `Solve: ${a}x + (${b}) = ${c}\n` +
-        `${a}x = ${c} - (${b}) = ${c - b}\n` +
-        `x = ${c - b} ÷ ${a} = ${correct}`;
-
-      return {
-        topic: "Algebra",
-        skill: "Solving linear equations",
-        difficulty: "Core / Intermediate",
-        question: `Solve: ${a}x + (${b}) = ${c}`,
-        options,
-        correctIndex,
-        solution
-      };
-    }
-
-    function makeRectangleAreaQuestion() {
-      const length = randInt(4, 20);
-      const width = randInt(3, 15);
-      const correct = length * width;
-
-      const { options, correctIndex } = buildMCQOptions(`${correct} cm²`, [
-        `${length + width} cm²`,
-        `${2 * (length + width)} cm²`,
-        `${length * length} cm²`
-      ]);
-
-      const solution = `Area = length × width = ${length} × ${width} = ${correct} cm²`;
-
-      return {
-        topic: "Geometry & Measure",
-        skill: "Area of a rectangle",
-        difficulty: "Foundation",
-        question: `A rectangle has length ${length} cm and width ${width} cm. What is its area?`,
-        options,
-        correctIndex,
-        solution
-      };
-    }
-
-    function makePythagorasQuestion() {
-      const triples = [[3,4,5],[5,12,13],[6,8,10],[8,15,17]];
-      const base = triples[randInt(0, triples.length - 1)];
-      const scale = randInt(1, 4);
-
-      const a = base[0] * scale;
-      const b = base[1] * scale;
-      const c = base[2] * scale;
-
-      const { options, correctIndex } = buildMCQOptions(`${c} cm`, [
-        `${a + b} cm`,
-        `${Math.abs(a - b)} cm`,
-        `${Math.round(Math.sqrt(a*a + (b*b)/2))} cm`
-      ]);
-
-      const solution =
-        `c² = a² + b²\n` +
-        `= ${a*a} + ${b*b} = ${a*a + b*b}\n` +
-        `c = √${a*a + b*b} = ${c} cm`;
-
-      return {
-        topic: "Geometry & Measure",
-        skill: "Pythagoras – hypotenuse",
-        difficulty: "Intermediate",
-        question: `A right-angled triangle has shorter sides ${a} cm and ${b} cm. Find the hypotenuse.`,
-        options,
-        correctIndex,
-        solution
-      };
-    }
-
-    function makeMeanQuestion() {
-      const n = randInt(4, 6);
-      const numbers = Array.from({length:n}, () => randInt(2, 15));
-      const sum = numbers.reduce((a,b)=>a+b,0);
-      const mean = sum / n;
-
-      const { options, correctIndex } = buildMCQOptions(String(mean), [
-        String(sum),
-        String(numbers[0]),
-        String(numbers[numbers.length - 1])
-      ]);
-
-      const solution =
-        `Data: ${numbers.join(", ")}\n` +
-        `Sum = ${sum}\n` +
-        `Mean = ${sum} ÷ ${n} = ${mean}`;
-
-      return {
-        topic: "Statistics & Probability",
-        skill: "Mean",
-        difficulty: "Foundation / Core",
-        question: `The marks are: ${numbers.join(", ")}.\nWhat is the mean?`,
-        options,
-        correctIndex,
-        solution
-      };
-    }
-
-    // ---------- Number templates ----------
-    function makePercentOfAmountQuestion() {
-      const base = randInt(6, 60) * 5;
-      const percentChoices = [5, 10, 12, 15, 20, 25, 30, 35, 40, 45];
-      const p = percentChoices[randInt(0, percentChoices.length - 1)];
-      const correct = (p / 100) * base;
-
-      const { options, correctIndex } = buildMCQOptions(String(correct), [
-        String(Math.round(base * (100 / p))),
-        String(Math.round(base * (p / 10))),
-        String(Math.round(base + correct))
-      ]);
-
-      const solution = `${p}% of ${base} = ${p}/100 × ${base} = ${correct}`;
-
-      return {
-        topic: "Number",
-        skill: "Percentage of an amount",
-        difficulty: "Foundation / Core",
-        question: `Find ${p}% of ${base}.`,
-        options,
-        correctIndex,
-        solution
-      };
+      return { topic: "Number", skill: "Sharing in a ratio", difficulty: "Core / Intermediate",
+        questionHTML: `£${total} is shared in the ratio ${a}:${b}. How much does the first person receive?`,
+        optionsHTML: options, correctIndex, solutionHTML: solution };
     }
 
     function makeDirectProportionQuestion() {
@@ -450,15 +223,27 @@
         `1 item costs £${costA.toFixed(2)} ÷ ${a} = £${unit.toFixed(2)}\n` +
         `${b} items cost ${b} × £${unit.toFixed(2)} = £${correct.toFixed(2)}`;
 
-      return {
-        topic: "Number",
-        skill: "Direct proportion",
-        difficulty: "Core / Intermediate",
-        question: `${a} identical pens cost £${costA.toFixed(2)}. How much do ${b} pens cost?`,
-        options,
-        correctIndex,
-        solution
-      };
+      return { topic: "Number", skill: "Direct proportion", difficulty: "Core / Intermediate",
+        questionHTML: `${a} identical pens cost £${costA.toFixed(2)}. How much do ${b} pens cost?`,
+        optionsHTML: options, correctIndex, solutionHTML: solution };
+    }
+
+    function makePercentOfAmountQuestion() {
+      const base = randInt(6, 60) * 5;
+      const percentChoices = [5, 10, 12, 15, 20, 25, 30, 35, 40, 45];
+      const p = percentChoices[randInt(0, percentChoices.length - 1)];
+      const correct = (p / 100) * base;
+
+      const { options, correctIndex } = buildMCQOptions(String(correct), [
+        String(Math.round(base * (100 / p))),
+        String(Math.round(base * (p / 10))),
+        String(Math.round(base + correct))
+      ]);
+
+      const solution = `${p}% of ${base} = ${p}/100 × ${base} = ${correct}`;
+
+      return { topic: "Number", skill: "Percentage of an amount", difficulty: "Foundation / Core",
+        questionHTML: `Find ${p}% of ${base}.`, optionsHTML: options, correctIndex, solutionHTML: solution };
     }
 
     function makeRoundingQuestion() {
@@ -475,15 +260,9 @@
           (Math.floor(x * Math.pow(10, dp)) / Math.pow(10, dp)).toFixed(dp)
         ]);
 
-        return {
-          topic: "Number",
-          skill: "Rounding (decimal places)",
-          difficulty: "Foundation / Core",
-          question: `Round ${number} to ${dp} decimal place${dp === 1 ? "" : "s"}.`,
-          options,
-          correctIndex,
-          solution: `${number} rounded to ${dp} dp is ${correct}.`
-        };
+        return { topic: "Number", skill: "Rounding (decimal places)", difficulty: "Foundation / Core",
+          questionHTML: `Round ${number} to ${dp} decimal place${dp === 1 ? "" : "s"}.`,
+          optionsHTML: options, correctIndex, solutionHTML: `${number} rounded to ${dp} dp is ${correct}.` };
       } else {
         const sf = randInt(1, 3);
         const correct = Number(x.toPrecision(sf)).toString();
@@ -493,52 +272,47 @@
           Math.floor(x).toString()
         ]);
 
-        return {
-          topic: "Number",
-          skill: "Rounding (significant figures)",
-          difficulty: "Foundation / Core",
-          question: `Round ${number} to ${sf} significant figure${sf === 1 ? "" : "s"}.`,
-          options,
-          correctIndex,
-          solution: `${number} rounded to ${sf} s.f. is ${correct}.`
-        };
+        return { topic: "Number", skill: "Rounding (significant figures)", difficulty: "Foundation / Core",
+          questionHTML: `Round ${number} to ${sf} significant figure${sf === 1 ? "" : "s"}.`,
+          optionsHTML: options, correctIndex, solutionHTML: `${number} rounded to ${sf} s.f. is ${correct}.` };
       }
     }
 
-    // ✅ FIXED: Standard form question will NEVER show e-notation
+    // ✅ GCSE standard form: no e-notation, no ^, always 1 ≤ a < 10, powers as superscripts
     function makeStandardFormQuestion() {
-      const coeff = (randInt(12, 98) / 10).toFixed(1);  // 1.2 to 9.8
+      // Start from a correct GCSE standard form seed:
+      const coeff = (randInt(12, 98) / 10);      // 1.2 to 9.8 (1 dp)
       const power = randInt(-4, 5);
 
-      // Student-facing decimal (GCSE style)
-      const ordinaryText = coeffPowerToPlainDecimal(coeff, power);
+      const coeffStr = stripTrailingZeros(coeff.toFixed(1));
+      const ordinaryText = coeffPowerToPlainDecimal(coeffStr, power);
 
-      const correctText = `${coeff} × 10^${power}`;
+      const correctHTML = sciHTML(coeff, power);
 
-      const { options, correctIndex } = buildMCQOptions(correctText, [
-        `${(parseFloat(coeff) * 10).toFixed(1)} × 10^${power - 1}`, // same value, different-looking
-        `${coeff} × 10^${-power}`,                                  // sign error
-        `${(parseFloat(coeff) / 10).toFixed(2)} × 10^${power + 1}`   // decimal shift error
-      ]);
+      // Distractors that are still written in standard form (GCSE-friendly)
+      // 1) sign error on power
+      const d1 = sciHTML(coeff, -power);
+      // 2) shift coefficient/power incorrectly but normalised back to standard form
+      const d2 = sciHTML(coeff * 10, power - 1); // equivalent value, but normalises back to correct → to avoid duplicates, we’ll tweak:
+      const d2alt = sciHTML(coeff, power + 1);   // wrong power
+      // 3) decimal shift error (common)
+      const d3 = sciHTML(coeff / 10, power + 1); // may normalise; still wrong sometimes
+
+      const distractors = Array.from(new Set([d1, d2alt, d3].filter(v => v !== correctHTML)));
+      while (distractors.length < 3) distractors.push(sciHTML(randInt(12,98)/10, randInt(-6,6)));
+
+      const { options, correctIndex } = buildMCQOptions(correctHTML, distractors.slice(0,3));
 
       const solution =
-        `We need a number between 1 and 10, multiplied by a power of 10.\n` +
-        `${ordinaryText} = ${coeff} × 10^${power}`;
+        `Standard form is a × 10ⁿ where 1 ≤ a < 10.\n` +
+        `${ordinaryText} = ${correctHTML}`;
 
-      return {
-        topic: "Number",
-        skill: "Standard form (convert)",
-        difficulty: "Core / Intermediate",
-        question: `Write ${ordinaryText} in standard form.`,
-        options,
-        correctIndex,
-        solution
-      };
+      return { topic: "Number", skill: "Standard form (convert)", difficulty: "Core / Intermediate",
+        questionHTML: `Write ${ordinaryText} in standard form.`, optionsHTML: options, correctIndex, solutionHTML: solution };
     }
 
     function makePowersRootsQuestion() {
       const mode = Math.random() < 0.5 ? "power" : "root";
-
       if (mode === "power") {
         const bases = [2,3,4,5,6,7,8,9];
         const b = bases[randInt(0, bases.length - 1)];
@@ -551,15 +325,8 @@
           String(Math.pow(n, b))
         ]);
 
-        return {
-          topic: "Number",
-          skill: "Powers",
-          difficulty: "Foundation / Core",
-          question: `Evaluate: ${b}^${n}`,
-          options,
-          correctIndex,
-          solution: `${b}^${n} = ${correct}.`
-        };
+        return { topic: "Number", skill: "Powers", difficulty: "Foundation / Core",
+          questionHTML: `Evaluate: ${b}^${n}`, optionsHTML: options, correctIndex, solutionHTML: `${b}^${n} = ${correct}.` };
       } else {
         const squares = [16,25,36,49,64,81,100,121,144,169,196,225];
         const s = squares[randInt(0, squares.length - 1)];
@@ -571,15 +338,8 @@
           String(correct - 1)
         ]);
 
-        return {
-          topic: "Number",
-          skill: "Square roots",
-          difficulty: "Foundation / Core",
-          question: `Evaluate: √${s}`,
-          options,
-          correctIndex,
-          solution: `√${s} = ${correct} because ${correct} × ${correct} = ${s}.`
-        };
+        return { topic: "Number", skill: "Square roots", difficulty: "Foundation / Core",
+          questionHTML: `Evaluate: √${s}`, optionsHTML: options, correctIndex, solutionHTML: `√${s} = ${correct} because ${correct} × ${correct} = ${s}.` };
       }
     }
 
@@ -609,82 +369,38 @@
         `Then × and ÷: ${b} × ${inner} ÷ ${e} = ${(b * inner / e).toFixed(2).replace(/\.00$/, "")}\n` +
         `Then add: ${a} + ${(b * inner / e).toFixed(2).replace(/\.00$/, "")} = ${correctText}`;
 
-      return {
-        topic: "Number",
-        skill: "BIDMAS / order of operations",
-        difficulty: "Core / Intermediate",
-        question: `Work out: ${a} + ${b} × (${c} - ${d}) ÷ ${e}`,
-        options,
-        correctIndex,
-        solution
-      };
+      return { topic: "Number", skill: "BIDMAS / order of operations", difficulty: "Core / Intermediate",
+        questionHTML: `Work out: ${a} + ${b} × (${c} - ${d}) ÷ ${e}`, optionsHTML: options, correctIndex, solutionHTML: solution };
     }
 
     function makeNegativeNumbersQuestion() {
       const mode = randInt(1, 3);
-
       if (mode === 1) {
         const x = -randInt(3, 20);
         const y = randInt(1, 20);
         const op = Math.random() < 0.5 ? "+" : "-";
         const correct = op === "+" ? x + y : x - y;
 
-        const { options, correctIndex } = buildMCQOptions(String(correct), [
-          String(-correct),
-          String(x + y),
-          String(x - y)
-        ]);
-
-        return {
-          topic: "Number",
-          skill: "Negative numbers (add/subtract)",
-          difficulty: "Foundation / Core",
-          question: `Work out: (${x}) ${op} ${y}`,
-          options,
-          correctIndex,
-          solution: `(${x}) ${op} ${y} = ${correct}`
-        };
+        const { options, correctIndex } = buildMCQOptions(String(correct), [String(-correct), String(x + y), String(x - y)]);
+        return { topic: "Number", skill: "Negative numbers (add/subtract)", difficulty: "Foundation / Core",
+          questionHTML: `Work out: (${x}) ${op} ${y}`, optionsHTML: options, correctIndex, solutionHTML: `(${x}) ${op} ${y} = ${correct}` };
       } else if (mode === 2) {
         const x = -randInt(2, 15);
         const y = -randInt(2, 15);
         const correct = x * y;
 
-        const { options, correctIndex } = buildMCQOptions(String(correct), [
-          String(-correct),
-          String(x + y),
-          String(correct - 1)
-        ]);
-
-        return {
-          topic: "Number",
-          skill: "Negative numbers (multiply)",
-          difficulty: "Foundation / Core",
-          question: `Work out: (${x}) × (${y})`,
-          options,
-          correctIndex,
-          solution: `Negative × negative = positive, so (${x}) × (${y}) = ${correct}`
-        };
+        const { options, correctIndex } = buildMCQOptions(String(correct), [String(-correct), String(x + y), String(correct - 1)]);
+        return { topic: "Number", skill: "Negative numbers (multiply)", difficulty: "Foundation / Core",
+          questionHTML: `Work out: (${x}) × (${y})`, optionsHTML: options, correctIndex, solutionHTML: `Negative × negative = positive, so (${x}) × (${y}) = ${correct}` };
       } else {
         const a = -randInt(2, 12);
         const b = randInt(2, 12);
         const c = -randInt(2, 12);
         const correct = a + b + c;
 
-        const { options, correctIndex } = buildMCQOptions(String(correct), [
-          String(a + b - c),
-          String(a - b + c),
-          String(Math.abs(a) + b + Math.abs(c))
-        ]);
-
-        return {
-          topic: "Number",
-          skill: "Negative numbers (mixed)",
-          difficulty: "Foundation / Core",
-          question: `Work out: (${a}) + ${b} + (${c})`,
-          options,
-          correctIndex,
-          solution: `(${a}) + ${b} + (${c}) = ${correct}`
-        };
+        const { options, correctIndex } = buildMCQOptions(String(correct), [String(a + b - c), String(a - b + c), String(Math.abs(a) + b + Math.abs(c))]);
+        return { topic: "Number", skill: "Negative numbers (mixed)", difficulty: "Foundation / Core",
+          questionHTML: `Work out: (${a}) + ${b} + (${c})`, optionsHTML: options, correctIndex, solutionHTML: `(${a}) + ${b} + (${c}) = ${correct}` };
       }
     }
 
@@ -708,18 +424,12 @@
         `Round to 1 s.f.: ${x} ≈ ${x1sf}, ${y} ≈ ${y1sf}\n` +
         `Estimate ≈ ${x1sf} × ${y1sf} = ${estimate}`;
 
-      return {
-        topic: "Number",
-        skill: "Estimation (rounding)",
-        difficulty: "Foundation / Core",
-        question: `Estimate ${x} × ${y} by rounding each number to 1 significant figure.`,
-        options,
-        correctIndex,
-        solution
-      };
+      return { topic: "Number", skill: "Estimation (rounding)", difficulty: "Foundation / Core",
+        questionHTML: `Estimate ${x} × ${y} by rounding each number to 1 significant figure.`,
+        optionsHTML: options, correctIndex, solutionHTML: solution };
     }
 
-    // ---------- Fractions & Percentages expansion ----------
+    // Fractions & Percentages expansion
     function makePercentageDecreaseQuestion() {
       const original = randInt(20, 120);
       const percentChoices = [5, 10, 12, 15, 20, 25, 30];
@@ -738,15 +448,9 @@
         `Decrease = ${p}% of ${original} = ${p}/100 × ${original} = £${decrease.toFixed(2)}\n` +
         `New amount = £${original.toFixed(2)} - £${decrease.toFixed(2)} = £${newVal.toFixed(2)}`;
 
-      return {
-        topic: "Number",
-        skill: "Percentage decrease",
-        difficulty: "Foundation / Core",
-        question: `A price is reduced from £${original.toFixed(2)} by ${p}%. What is the new price?`,
-        options,
-        correctIndex,
-        solution
-      };
+      return { topic: "Number", skill: "Percentage decrease", difficulty: "Foundation / Core",
+        questionHTML: `A price is reduced from £${original.toFixed(2)} by ${p}%. What is the new price?`,
+        optionsHTML: options, correctIndex, solutionHTML: solution };
     }
 
     function makeReversePercentageQuestion() {
@@ -766,9 +470,7 @@
       const wrong3 = isIncrease ? (finalVal / (1 - p/100)) : (finalVal / (1 + p/100));
 
       const { options, correctIndex } = buildMCQOptions(correctText, [
-        `£${wrong1.toFixed(2)}`,
-        `£${wrong2.toFixed(2)}`,
-        `£${wrong3.toFixed(2)}`
+        `£${wrong1.toFixed(2)}`, `£${wrong2.toFixed(2)}`, `£${wrong3.toFixed(2)}`
       ]);
 
       const changeWord = isIncrease ? "increased" : "decreased";
@@ -777,48 +479,29 @@
         `So original = final ÷ ${multiplier.toFixed(2)}\n` +
         `= £${finalVal.toFixed(2)} ÷ ${multiplier.toFixed(2)} = £${correct.toFixed(2)}`;
 
-      return {
-        topic: "Number",
-        skill: "Reverse percentage",
-        difficulty: "Core / Intermediate",
-        question: `A value is ${changeWord} by ${p}% to £${finalVal.toFixed(2)}. What was the original value?`,
-        options,
-        correctIndex,
-        solution
-      };
+      return { topic: "Number", skill: "Reverse percentage", difficulty: "Core / Intermediate",
+        questionHTML: `A value is ${changeWord} by ${p}% to £${finalVal.toFixed(2)}. What was the original value?`,
+        optionsHTML: options, correctIndex, solutionHTML: solution };
     }
 
     function makeFractionOfAmountQuestion() {
-      const fracs = [
-        {n: 1, d: 2}, {n: 1, d: 3}, {n: 2, d: 3}, {n: 1, d: 4},
-        {n: 3, d: 4}, {n: 2, d: 5}, {n: 3, d: 5}
-      ];
+      const fracs = [{n:1,d:2},{n:1,d:3},{n:2,d:3},{n:1,d:4},{n:3,d:4},{n:2,d:5},{n:3,d:5}];
       const f = fracs[randInt(0, fracs.length - 1)];
-
       const k = randInt(6, 40);
       const amount = f.d * k;
       const correct = (f.n / f.d) * amount;
 
       const correctText = String(correct);
       const { options, correctIndex } = buildMCQOptions(correctText, [
-        String(amount / f.d),
-        String(amount * f.n),
-        String(amount / f.n)
+        String(amount / f.d), String(amount * f.n), String(amount / f.n)
       ]);
 
       const solution =
         `${f.n}/${f.d} of ${amount} = (${f.n} × ${amount}) ÷ ${f.d}\n` +
         `= ${f.n * amount} ÷ ${f.d} = ${correct}`;
 
-      return {
-        topic: "Number",
-        skill: "Fraction of an amount",
-        difficulty: "Foundation / Core",
-        question: `Find ${f.n}/${f.d} of ${amount}.`,
-        options,
-        correctIndex,
-        solution
-      };
+      return { topic: "Number", skill: "Fraction of an amount", difficulty: "Foundation / Core",
+        questionHTML: `Find ${f.n}/${f.d} of ${amount}.`, optionsHTML: options, correctIndex, solutionHTML: solution };
     }
 
     function makeFractionCalculationQuestion() {
@@ -854,22 +537,13 @@
         `So = (${a} ${op} ${b})/${common} = ${resN}/${common}\n` +
         `Simplify: ${resN}/${common} = ${simp.n}/${simp.d}`;
 
-      return {
-        topic: "Number",
-        skill: "Fraction calculations",
-        difficulty: "Core / Intermediate",
-        question: `Work out: ${n1}/${d1} ${op} ${n2}/${d2} (give your answer in simplest form).`,
-        options,
-        correctIndex,
-        solution
-      };
+      return { topic: "Number", skill: "Fraction calculations", difficulty: "Core / Intermediate",
+        questionHTML: `Work out: ${n1}/${d1} ${op} ${n2}/${d2} (give your answer in simplest form).`,
+        optionsHTML: options, correctIndex, solutionHTML: solution };
     }
 
     function makeFDPConversionQuestion() {
-      const candidates = [
-        {n:1,d:2},{n:1,d:4},{n:3,d:4},{n:1,d:5},{n:2,d:5},{n:3,d:5},{n:4,d:5},
-        {n:1,d:8},{n:3,d:8},{n:5,d:8},{n:7,d:8},{n:1,d:10},{n:3,d:10},{n:7,d:10}
-      ];
+      const candidates = [{n:1,d:2},{n:1,d:4},{n:3,d:4},{n:1,d:5},{n:2,d:5},{n:3,d:5},{n:4,d:5},{n:1,d:8},{n:3,d:8},{n:5,d:8},{n:7,d:8},{n:1,d:10},{n:3,d:10},{n:7,d:10}];
       const f = candidates[randInt(0, candidates.length - 1)];
       const mode = Math.random() < 0.5 ? "decimal" : "percent";
 
@@ -878,17 +552,13 @@
       const pct = (value * 100);
       const pctText = `${Number(pct.toFixed(1)).toString().replace(/\.0$/,"")}%`;
 
-      let question, correctText, distractors, solution;
+      let questionHTML, correctText, distractors, solutionHTML;
 
       if (mode === "decimal") {
         correctText = dec;
-        distractors = [
-          (f.d / f.n).toString(),
-          Number((value * 10).toFixed(3)).toString(),
-          Number((value / 10).toFixed(3)).toString()
-        ];
-        question = `Convert ${f.n}/${f.d} to a decimal.`;
-        solution = `${f.n}/${f.d} = ${f.n} ÷ ${f.d} = ${dec}`;
+        distractors = [(f.d / f.n).toString(), Number((value * 10).toFixed(3)).toString(), Number((value / 10).toFixed(3)).toString()];
+        questionHTML = `Convert ${f.n}/${f.d} to a decimal.`;
+        solutionHTML = `${f.n}/${f.d} = ${f.n} ÷ ${f.d} = ${dec}`;
       } else {
         correctText = pctText;
         distractors = [
@@ -896,24 +566,103 @@
           `${Number((pct * 10).toFixed(1)).toString().replace(/\.0$/,"")}%`,
           `${Number((pct + 10).toFixed(1)).toString().replace(/\.0$/,"")}%`
         ];
-        question = `Convert ${f.n}/${f.d} to a percentage.`;
-        solution = `${f.n}/${f.d} = ${dec}\nPercentage = ${dec} × 100 = ${pctText}`;
+        questionHTML = `Convert ${f.n}/${f.d} to a percentage.`;
+        solutionHTML = `${f.n}/${f.d} = ${dec}\nPercentage = ${dec} × 100 = ${pctText}`;
       }
 
       const { options, correctIndex } = buildMCQOptions(correctText, distractors);
 
-      return {
-        topic: "Number",
-        skill: "Fraction / decimal / percentage conversion",
-        difficulty: "Foundation / Core",
-        question,
-        options,
-        correctIndex,
-        solution
-      };
+      return { topic: "Number", skill: "Fraction / decimal / percentage conversion", difficulty: "Foundation / Core",
+        questionHTML, optionsHTML: options, correctIndex, solutionHTML };
     }
 
-    // ---------- Question bank registry ----------
+    // (Other topics - simple examples)
+    function makeLinearEquationQuestion() {
+      const a = randInt(2, 9);
+      const x = randInt(-5, 8);
+      const b = randInt(-10, 12);
+      const c = a * x + b;
+
+      const correct = x;
+      const wrong1 = (c - b) / (a + 1);
+      const wrong2 = c - b;
+      const wrong3 = (c + b) / a;
+
+      const { options, correctIndex } = buildMCQOptions(String(correct), [
+        String(Math.round(wrong1)),
+        String(wrong2),
+        String(Math.round(wrong3))
+      ]);
+
+      const solution =
+        `Solve: ${a}x + (${b}) = ${c}\n` +
+        `${a}x = ${c} - (${b}) = ${c - b}\n` +
+        `x = ${c - b} ÷ ${a} = ${correct}`;
+
+      return { topic: "Algebra", skill: "Solving linear equations", difficulty: "Core / Intermediate",
+        questionHTML: `Solve: ${a}x + (${b}) = ${c}`, optionsHTML: options, correctIndex, solutionHTML: solution };
+    }
+
+    function makeRectangleAreaQuestion() {
+      const length = randInt(4, 20);
+      const width = randInt(3, 15);
+      const correct = length * width;
+
+      const { options, correctIndex } = buildMCQOptions(`${correct} cm²`, [
+        `${length + width} cm²`,
+        `${2 * (length + width)} cm²`,
+        `${length * length} cm²`
+      ]);
+
+      return { topic: "Geometry & Measure", skill: "Area of a rectangle", difficulty: "Foundation",
+        questionHTML: `A rectangle has length ${length} cm and width ${width} cm. What is its area?`,
+        optionsHTML: options, correctIndex, solutionHTML: `Area = length × width = ${length} × ${width} = ${correct} cm²` };
+    }
+
+    function makePythagorasQuestion() {
+      const triples = [[3,4,5],[5,12,13],[6,8,10],[8,15,17]];
+      const base = triples[randInt(0, triples.length - 1)];
+      const scale = randInt(1, 4);
+
+      const a = base[0] * scale;
+      const b = base[1] * scale;
+      const c = base[2] * scale;
+
+      const { options, correctIndex } = buildMCQOptions(`${c} cm`, [
+        `${a + b} cm`,
+        `${Math.abs(a - b)} cm`,
+        `${Math.round(Math.sqrt(a*a + (b*b)/2))} cm`
+      ]);
+
+      const solution =
+        `c² = a² + b²\n` +
+        `= ${a*a} + ${b*b} = ${a*a + b*b}\n` +
+        `c = √${a*a + b*b} = ${c} cm`;
+
+      return { topic: "Geometry & Measure", skill: "Pythagoras – hypotenuse", difficulty: "Intermediate",
+        questionHTML: `A right-angled triangle has shorter sides ${a} cm and ${b} cm. Find the hypotenuse.`,
+        optionsHTML: options, correctIndex, solutionHTML: solution };
+    }
+
+    function makeMeanQuestion() {
+      const n = randInt(4, 6);
+      const numbers = Array.from({length:n}, () => randInt(2, 15));
+      const sum = numbers.reduce((a,b)=>a+b,0);
+      const mean = sum / n;
+
+      const { options, correctIndex } = buildMCQOptions(String(mean), [String(sum), String(numbers[0]), String(numbers[numbers.length - 1])]);
+
+      const solution =
+        `Data: ${numbers.join(", ")}\n` +
+        `Sum = ${sum}\n` +
+        `Mean = ${sum} ÷ ${n} = ${mean}`;
+
+      return { topic: "Statistics & Probability", skill: "Mean", difficulty: "Foundation / Core",
+        questionHTML: `The marks are: ${numbers.join(", ")}.\nWhat is the mean?`,
+        optionsHTML: options, correctIndex, solutionHTML: solution };
+    }
+
+    // ---------- Bank ----------
     const questionBank = [
       makeLinearEquationQuestion,
       makeRectangleAreaQuestion,
@@ -921,21 +670,22 @@
       makeMeanQuestion,
 
       makePercentageIncreaseQuestion,
+      makePercentageDecreaseQuestion,
+      makeReversePercentageQuestion,
       makePercentOfAmountQuestion,
+      makeFractionOfAmountQuestion,
+      makeFractionCalculationQuestion,
+      makeFDPConversionQuestion,
+
       makeRatioShareQuestion,
       makeDirectProportionQuestion,
+
       makeRoundingQuestion,
       makeStandardFormQuestion,
       makePowersRootsQuestion,
       makeBIDMASQuestion,
       makeNegativeNumbersQuestion,
-      makeEstimationQuestion,
-
-      makePercentageDecreaseQuestion,
-      makeReversePercentageQuestion,
-      makeFractionOfAmountQuestion,
-      makeFractionCalculationQuestion,
-      makeFDPConversionQuestion
+      makeEstimationQuestion
     ];
 
     // ---------- App wiring ----------
@@ -957,10 +707,7 @@
       let availableFactories = questionBank;
 
       if (chosenTopic !== "all") {
-        availableFactories = questionBank.filter(factory => {
-          const q = factory();
-          return q.topic === chosenTopic;
-        });
+        availableFactories = questionBank.filter(factory => factory().topic === chosenTopic);
       }
 
       if (availableFactories.length === 0) {
@@ -980,17 +727,19 @@
       skillTagEl.textContent = currentQuestion.skill;
       difficultyTextEl.textContent = currentQuestion.difficulty;
 
-      questionTextEl.textContent = currentQuestion.question;
+      // Allow GCSE superscripts, etc.
+      questionTextEl.innerHTML = currentQuestion.questionHTML;
 
       optionsListEl.innerHTML = "";
       const labels = ["A", "B", "C", "D"];
-      currentQuestion.options.forEach((opt, index) => {
+      currentQuestion.optionsHTML.forEach((opt, index) => {
         const li = document.createElement("li");
         li.innerHTML = `<span class="option-label">${labels[index]}.</span> ${opt}`;
         optionsListEl.appendChild(li);
       });
 
-      solutionTextEl.textContent = currentQuestion.solution;
+      // Allow GCSE superscripts in solutions too
+      solutionTextEl.innerHTML = currentQuestion.solutionHTML;
       solutionBlockEl.style.display = "none";
     }
 
