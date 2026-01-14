@@ -187,6 +187,41 @@
       return { n: n / g, d: d / g };
     }
 
+    // GCSE-friendly decimal formatter for numbers of the form (coeffStr × 10^power)
+    // Example: coeffStr="1.6", power=-4 -> "0.00016" (NEVER "1.6e-4")
+    function coeffPowerToPlainDecimal(coeffStr, power) {
+      // Remove decimal point but remember how many digits were before it
+      const dotIndex = coeffStr.indexOf(".");
+      const digitsBeforeDot = (dotIndex === -1) ? coeffStr.length : dotIndex;
+      const digitsOnly = coeffStr.replace(".", ""); // e.g. "1.6" -> "16"
+      const totalDigits = digitsOnly.length;
+
+      // The decimal point in the digits-only number is after digitsBeforeDot
+      // Multiplying by 10^power shifts that point right (power positive) or left (power negative)
+      const newDecimalPos = digitsBeforeDot + power; // position in digitsOnly where decimal point should go
+
+      // If decimal point ends up at or beyond the end -> integer with zeros
+      if (newDecimalPos >= totalDigits) {
+        const zeros = "0".repeat(newDecimalPos - totalDigits);
+        return digitsOnly + zeros;
+      }
+
+      // If decimal point ends up before the start -> 0.00...digits
+      if (newDecimalPos <= 0) {
+        const zeros = "0".repeat(-newDecimalPos);
+        // Keep all digits; allow trailing zeros if they arise naturally from coeff
+        return "0." + zeros + digitsOnly;
+      }
+
+      // Otherwise it sits inside the digits
+      const left = digitsOnly.slice(0, newDecimalPos);
+      const right = digitsOnly.slice(newDecimalPos);
+
+      // Remove unnecessary trailing zeros in the decimal part for student-friendliness
+      const rightTrimmed = right.replace(/0+$/, "");
+      return rightTrimmed.length ? (left + "." + rightTrimmed) : left;
+    }
+
     // ---------- Existing templates ----------
     function makePercentageIncreaseQuestion() {
       const originalPrice = randInt(20, 80);
@@ -371,7 +406,7 @@
       };
     }
 
-    // ---------- Number templates (existing Phase 1) ----------
+    // ---------- Number templates ----------
     function makePercentOfAmountQuestion() {
       const base = randInt(6, 60) * 5;
       const percentChoices = [5, 10, 12, 15, 20, 25, 30, 35, 40, 45];
@@ -470,23 +505,25 @@
       }
     }
 
+    // ✅ FIXED: Standard form question will NEVER show e-notation
     function makeStandardFormQuestion() {
-      const coeff = (randInt(12, 98) / 10).toFixed(1);
+      const coeff = (randInt(12, 98) / 10).toFixed(1);  // 1.2 to 9.8
       const power = randInt(-4, 5);
-      const ordinary = (parseFloat(coeff) * Math.pow(10, power));
-      const ordinaryText = (Math.abs(ordinary) >= 1e-3 && Math.abs(ordinary) < 1e7)
-        ? ordinary.toString()
-        : ordinary.toExponential(3);
+
+      // Student-facing decimal (GCSE style)
+      const ordinaryText = coeffPowerToPlainDecimal(coeff, power);
 
       const correctText = `${coeff} × 10^${power}`;
 
       const { options, correctIndex } = buildMCQOptions(correctText, [
-        `${(parseFloat(coeff) * 10).toFixed(1)} × 10^${power - 1}`,
-        `${coeff} × 10^${-power}`,
-        `${(parseFloat(coeff) / 10).toFixed(2)} × 10^${power + 1}`
+        `${(parseFloat(coeff) * 10).toFixed(1)} × 10^${power - 1}`, // same value, different-looking
+        `${coeff} × 10^${-power}`,                                  // sign error
+        `${(parseFloat(coeff) / 10).toFixed(2)} × 10^${power + 1}`   // decimal shift error
       ]);
 
-      const solution = `${ordinaryText} = ${coeff} × 10^${power} (standard form).`;
+      const solution =
+        `We need a number between 1 and 10, multiplied by a power of 10.\n` +
+        `${ordinaryText} = ${coeff} × 10^${power}`;
 
       return {
         topic: "Number",
@@ -682,7 +719,7 @@
       };
     }
 
-    // ---------- NEW: Fractions & Percentages expansion (exam-complete) ----------
+    // ---------- Fractions & Percentages expansion ----------
     function makePercentageDecreaseQuestion() {
       const original = randInt(20, 120);
       const percentChoices = [5, 10, 12, 15, 20, 25, 30];
@@ -692,9 +729,9 @@
 
       const correctText = `£${newVal.toFixed(2)}`;
       const { options, correctIndex } = buildMCQOptions(correctText, [
-        `£${(original + decrease).toFixed(2)}`,         // increased instead
-        `£${(original - p).toFixed(2)}`,                // subtract p as amount
-        `£${(original * (p / 100)).toFixed(2)}`         // gave the decrease only
+        `£${(original + decrease).toFixed(2)}`,
+        `£${(original - p).toFixed(2)}`,
+        `£${(original * (p / 100)).toFixed(2)}`
       ]);
 
       const solution =
@@ -713,7 +750,6 @@
     }
 
     function makeReversePercentageQuestion() {
-      // Choose a nice original and a percent increase OR decrease, then ask for original.
       const isIncrease = Math.random() < 0.6;
       const percentChoices = [5, 10, 12, 15, 20, 25];
       const p = percentChoices[randInt(0, percentChoices.length - 1)];
@@ -725,16 +761,9 @@
       const correct = original;
       const correctText = `£${correct.toFixed(2)}`;
 
-      // Common errors
-      const wrong1 = isIncrease
-        ? (finalVal * (1 - p/100))              // tried to “undo” by subtracting %
-        : (finalVal * (1 + p/100));             // tried to “undo” by adding %
-      const wrong2 = isIncrease
-        ? (finalVal / (p/100))                  // divided by p not by multiplier
-        : (finalVal / (p/100));
-      const wrong3 = isIncrease
-        ? (finalVal / (1 - p/100))              // used wrong multiplier
-        : (finalVal / (1 + p/100));             // used wrong multiplier
+      const wrong1 = isIncrease ? (finalVal * (1 - p/100)) : (finalVal * (1 + p/100));
+      const wrong2 = (finalVal / (p/100));
+      const wrong3 = isIncrease ? (finalVal / (1 - p/100)) : (finalVal / (1 + p/100));
 
       const { options, correctIndex } = buildMCQOptions(correctText, [
         `£${wrong1.toFixed(2)}`,
@@ -760,7 +789,6 @@
     }
 
     function makeFractionOfAmountQuestion() {
-      // Choose a friendly fraction and ensure divisible
       const fracs = [
         {n: 1, d: 2}, {n: 1, d: 3}, {n: 2, d: 3}, {n: 1, d: 4},
         {n: 3, d: 4}, {n: 2, d: 5}, {n: 3, d: 5}
@@ -768,14 +796,14 @@
       const f = fracs[randInt(0, fracs.length - 1)];
 
       const k = randInt(6, 40);
-      const amount = f.d * k; // divisible by denominator
+      const amount = f.d * k;
       const correct = (f.n / f.d) * amount;
 
       const correctText = String(correct);
       const { options, correctIndex } = buildMCQOptions(correctText, [
-        String(amount / f.d),               // forgot numerator
-        String(amount * f.n),               // multiplied by numerator only
-        String(amount / f.n)                // inverted
+        String(amount / f.d),
+        String(amount * f.n),
+        String(amount / f.n)
       ]);
 
       const solution =
@@ -794,14 +822,12 @@
     }
 
     function makeFractionCalculationQuestion() {
-      // Add or subtract two fractions (with manageable denominators)
       const d1 = [4,5,6,8,10,12][randInt(0, 5)];
       const d2 = [3,4,5,6,8,10,12][randInt(0, 6)];
       const n1 = randInt(1, d1 - 1);
       const n2 = randInt(1, d2 - 1);
       const op = Math.random() < 0.5 ? "+" : "-";
 
-      // Compute result using common denominator
       const common = d1 * d2;
       const a = n1 * d2;
       const b = n2 * d1;
@@ -811,12 +837,10 @@
       const simp = simplifyFraction(resN, resD);
       const correctText = `${simp.n}/${simp.d}`;
 
-      // Distractors
-      const wrong1 = `${Math.max(1, n1 + (op === "+" ? n2 : -n2))}/${Math.max(1, d1 + d2)}`; // add tops & bottoms
-      const wrong2 = `${resN}/${resD}`; // unsimplified (may equal correct if gcd=1 but that's fine—avoid duplicates)
-      const wrong3 = `${(op === "+" ? (n1 + n2) : (n1 - n2))}/${d1}`; // treated as same denominator
+      const wrong1 = `${Math.max(1, n1 + (op === "+" ? n2 : -n2))}/${Math.max(1, d1 + d2)}`;
+      const wrong2 = `${resN}/${resD}`;
+      const wrong3 = `${(op === "+" ? (n1 + n2) : (n1 - n2))}/${d1}`;
 
-      // Ensure distractors are distinct strings
       const dists = Array.from(new Set([wrong1, wrong2, wrong3].filter(v => v !== correctText)));
       while (dists.length < 3) dists.push(`${randInt(1,9)}/${randInt(2,12)}`);
 
@@ -842,7 +866,6 @@
     }
 
     function makeFDPConversionQuestion() {
-      // Choose a fraction that has a terminating decimal, then ask for decimal or percent.
       const candidates = [
         {n:1,d:2},{n:1,d:4},{n:3,d:4},{n:1,d:5},{n:2,d:5},{n:3,d:5},{n:4,d:5},
         {n:1,d:8},{n:3,d:8},{n:5,d:8},{n:7,d:8},{n:1,d:10},{n:3,d:10},{n:7,d:10}
@@ -860,18 +883,18 @@
       if (mode === "decimal") {
         correctText = dec;
         distractors = [
-          (f.d / f.n).toString(),                        // inverted
-          Number((value * 10).toFixed(3)).toString(),    // ×10 error
-          Number((value / 10).toFixed(3)).toString()     // ÷10 error
+          (f.d / f.n).toString(),
+          Number((value * 10).toFixed(3)).toString(),
+          Number((value / 10).toFixed(3)).toString()
         ];
         question = `Convert ${f.n}/${f.d} to a decimal.`;
         solution = `${f.n}/${f.d} = ${f.n} ÷ ${f.d} = ${dec}`;
       } else {
         correctText = pctText;
         distractors = [
-          `${Number((pct / 10).toFixed(1)).toString().replace(/\.0$/,"")}%`, // ÷10 error
-          `${Number((pct * 10).toFixed(1)).toString().replace(/\.0$/,"")}%`, // ×10 error
-          `${Number((pct + 10).toFixed(1)).toString().replace(/\.0$/,"")}%`  // +10% error
+          `${Number((pct / 10).toFixed(1)).toString().replace(/\.0$/,"")}%`,
+          `${Number((pct * 10).toFixed(1)).toString().replace(/\.0$/,"")}%`,
+          `${Number((pct + 10).toFixed(1)).toString().replace(/\.0$/,"")}%`
         ];
         question = `Convert ${f.n}/${f.d} to a percentage.`;
         solution = `${f.n}/${f.d} = ${dec}\nPercentage = ${dec} × 100 = ${pctText}`;
@@ -892,13 +915,11 @@
 
     // ---------- Question bank registry ----------
     const questionBank = [
-      // Existing cross-topic examples
       makeLinearEquationQuestion,
       makeRectangleAreaQuestion,
       makePythagorasQuestion,
       makeMeanQuestion,
 
-      // Number (existing)
       makePercentageIncreaseQuestion,
       makePercentOfAmountQuestion,
       makeRatioShareQuestion,
@@ -910,7 +931,6 @@
       makeNegativeNumbersQuestion,
       makeEstimationQuestion,
 
-      // New Fractions & Percentages expansion
       makePercentageDecreaseQuestion,
       makeReversePercentageQuestion,
       makeFractionOfAmountQuestion,
