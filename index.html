@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mr Nathan's GCSE Maths Question Bank</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f5f7fb;
+    }
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      background: #ffffff;
+      padding: 24px 28px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    h1 {
+      margin-top: 0;
+      font-size: 1.6rem;
+      color: #134b9b;
+    }
+    .subtitle {
+      color: #555;
+      margin-bottom: 16px;
+      font-size: 0.95rem;
+    }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+      align-items: center;
+    }
+    select, button {
+      padding: 8px 12px;
+      font-size: 0.95rem;
+      border-radius: 4px;
+      border: 1px solid #c5cbe0;
+      background: #ffffff;
+      cursor: pointer;
+    }
+    button {
+      background: #134b9b;
+      color: #fff;
+      border: none;
+    }
+    button:hover {
+      background: #0f3f84;
+    }
+    .meta {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 8px;
+    }
+    .question-text {
+      font-size: 1.05rem;
+      margin: 12px 0 16px;
+      white-space: pre-wrap;
+    }
+    .options {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 16px;
+    }
+    .options li {
+      margin-bottom: 6px;
+    }
+    .option-label {
+      display: inline-block;
+      width: 20px;
+      font-weight: bold;
+    }
+    .solution {
+      border-top: 1px solid #dde3f5;
+      margin-top: 12px;
+      padding-top: 12px;
+      display: none;
+      font-size: 0.95rem;
+    }
+    .solution pre {
+      margin: 0;
+      white-space: pre-wrap;
+      font-family: inherit;
+    }
+    .difficulty {
+      font-weight: bold;
+    }
+    .footer-note {
+      margin-top: 20px;
+      font-size: 0.8rem;
+      color: #999;
+    }
+    .pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #e7eefe;
+      color: #134b9b;
+      font-size: 0.75rem;
+      margin-right: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Mr Nathan's GCSE Maths Question Bank</h1>
+    <div class="subtitle">
+      Intermediate Tier • Random, regeneratable MCQs with full worked solutions.
+    </div>
+
+    <div class="controls">
+      <label for="topicSelect">Topic:</label>
+      <select id="topicSelect">
+        <option value="all">(All topics)</option>
+        <option value="Number">Number</option>
+        <option value="Algebra">Algebra</option>
+        <option value="Geometry & Measure">Geometry & Measure</option>
+        <option value="Statistics & Probability">Statistics & Probability</option>
+      </select>
+
+      <button id="newQuestionBtn">New Question</button>
+      <button id="showSolutionBtn">Show Solution</button>
+    </div>
+
+    <div class="meta">
+      <span id="topicTag" class="pill"></span>
+      <span id="skillTag" class="pill"></span>
+      <span class="difficulty">Difficulty: <span id="difficultyText"></span></span>
+    </div>
+
+    <div class="question-text" id="questionText">
+      Click “New Question” to begin.
+    </div>
+
+    <ul class="options" id="optionsList"></ul>
+
+    <div class="solution" id="solutionBlock">
+      <strong>Worked solution</strong>
+      <pre id="solutionText"></pre>
+    </div>
+
+    <div class="footer-note">
+      This is a sample tool. Extend the question bank to cover all WJEC Intermediate Tier topics.
+    </div>
+  </div>
+
+  <script>
+    // ---------- Utilities ----------
+    function randInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function shuffleArray(arr) {
+      const copy = arr.slice();
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function buildMCQOptions(correctText, distractorTexts) {
+      const all = [String(correctText), ...distractorTexts.map(String)];
+      const shuffled = shuffleArray(all);
+      return {
+        options: shuffled,
+        correctIndex: shuffled.findIndex(v => v === String(correctText))
+      };
+    }
+
+    // ---------- Existing templates ----------
+    function makePercentageIncreaseQuestion() {
+      const originalPrice = randInt(20, 80);
+      const percentChoices = [5, 8, 10, 12, 15, 20];
+      const percent = percentChoices[randInt(0, percentChoices.length - 1)];
+
+      const increase = originalPrice * (percent / 100);
+      const newPrice = originalPrice + increase;
+
+      const wrong1 = originalPrice - increase;
+      const wrong2 = originalPrice * (1 - percent / 100);
+      const wrong3 = originalPrice + percent;
+
+      let answers = [newPrice, wrong1, wrong2, wrong3].map(v => `£${v.toFixed(2)}`);
+      answers = shuffleArray(answers);
+      const correctIndex = answers.findIndex(v => v === `£${newPrice.toFixed(2)}`);
+
+      const solution =
+        `Original price = £${originalPrice.toFixed(2)}\n` +
+        `Increase = ${percent}% of ${originalPrice} = ${percent}/100 × ${originalPrice} = £${increase.toFixed(2)}\n` +
+        `New price = £${originalPrice.toFixed(2)} + £${increase.toFixed(2)} = £${newPrice.toFixed(2)}`;
+
+      return {
+        topic: "Number",
+        skill: "Percentage increase",
+        difficulty: "Foundation / Core",
+        question: `A coat originally costs £${originalPrice.toFixed(2)}. Its price is increased by ${percent}%. What is the new price?`,
+        options: answers,
+        correctIndex,
+        solution
+      };
+    }
+
+    function makeRatioShareQuestion() {
+      const a = randInt(1, 5);
+      const b = randInt(1, 5);
+      const sumParts = a + b;
+
+      const k = randInt(5, 20);
+      const total = sumParts * k;
+
+      const shareA = total * (a / sumParts);
+      const shareB = total * (b / sumParts);
+
+      const correctText = `£${shareA.toFixed(2)}`;
+      const { options, correctIndex } = buildMCQOptions(correctText, [
+        `£${shareB.toFixed(2)}`,
+        `£${(total / sumParts).toFixed(2)}`,
+        `£${(total * (sumParts / a)).toFixed(2)}`
+      ]);
+
+      const solution =
+        `Total = £${total}\n` +
+        `Ratio ${a}:${b} → total parts = ${sumParts}\n` +
+        `One part = £${total} ÷ ${sumParts} = £${(total / sumParts).toFixed(2)}\n` +
+        `First share = ${a} parts = £${shareA.toFixed(2)}`;
+
+      return {
+        topic: "Number",
+        skill: "Sharing in a ratio",
+        difficulty: "Core / Intermediate",
+        question: `£${total} is shared in the ratio ${a}:${b}. How much does the first person receive?`,
+        options,
+        correctIndex,
+        solution
+      };
+    }
+
+    function makeLinearEquationQuestion() {
+      const a = randInt(2, 9);
+      const x = randInt(-5, 8);
+      const b = randInt(-10, 12);
+      const c = a * x + b;
+
+      const correct = x;
+      const wrong1 = (c - b) / (a + 1);
+      const wrong2 = c - b;
+      const wrong3 = (c + b) / a;
+
+      const { options, correctIndex } = buildMCQOptions(String(correct), [
+        String(Math.round(wrong1)),
+        String(wrong2),
+        String(Math.round(wrong3))
+      ]);
+
+      const solution =
+        `Solve: ${a}x + (${b}) = ${c}\n` +
+        `${a}x = ${c} - (${b}) = ${c - b}\n` +
+        `x = ${c - b} ÷ ${a} = ${correct}`;
+
+      return {
+        topic: "Algebra",
+        skill: "Solving linear equations",
+        difficulty: "Core / Intermediate",
+        question: `Solve: ${a}x + (${b}) = ${c}`,
+        options,
+        correctIndex,
+        solution
+      };
+    }
+
+    function makeRectangleAreaQuestion() {
+      const length = randInt(4, 20);
+      const width = randInt(3, 15);
+      const correct = length * width;
+
+      const { options, correctIndex } = buildMCQOptions(`${correct} cm²`, [
+        `${length + width} cm²`,
+        `${2 * (length + width)} cm²`,
+        `${length * length} cm²`
+      ]);
+
+      const solution = `Area = length × width = ${length} × ${width} = ${correct} cm²`;
+
+      return {
+        topic: "Geometry & Measure",
+        skill: "Area of a rectangle",
+        difficulty: "Foundation",
+        question: `A rectangle has length ${length} cm and width ${width} cm. What is its area?`,
+        options,
+        correctIndex,
+        solution
+      };
+    }
+
+    function makePythagorasQuestion() {
+      const triples = [[3,4,5],[5,12,13],[6,8,10],[8,15,17]];
+      const base = triples[randInt(0, triples.length - 1)];
+      const scale = randInt(1, 4);
+
+      const a = base[0] * scale;
+      const b = base[1] * scale;
+      const c = base[2] * scale;
+
+      const { options, correctIndex } = buildMCQOptions(`${c} cm`, [
+        `${a + b} cm`,
+        `${Math.abs(a - b)} cm`,
+        `${Math.round(Math.sqrt(a*a + (b*b)/2))} cm`
+      ]);
+
+      const solution =
+        `c² = a² + b²\n` +
+        `= ${a*a} + ${b*b} = ${a*a + b*b}\n` +
+        `c = √${a*a + b*b} = ${c} cm`;
+
+      return {
+        topic: "Geometry & Measure",
+        skill: "Pythagoras – hypotenuse",
+        difficulty: "Intermediate",
+        question: `A right-angled triangle has shorter sides ${a} cm and ${b} cm. Find the hypotenuse.`,
+        options,
+        correctIndex,
+        solution
+      };
+    }
+
+    function makeMeanQuestion() {
+      const n = randInt(4, 6);
+      const numbers = Array.from({length:n}, () => randInt(2, 15));
+      const sum = numbers.reduce((a,b)=>a+b,0);
+      const mean = sum / n;
+
+      const { options, correctIndex } = buildMCQOptions(String(mean), [
+        String(sum),
+        String(numbers[0]),
+        String(numbers[numbers.length - 1])
+      ]);
+
+      const solution =
+        `Data: ${numbers.join(", ")}\n` +
+        `Sum = ${sum}\n` +
+        `Mean = ${sum} ÷ ${n} = ${mean}`;
+
+      return {
+        topic: "Statistics & Probability",
+        skill: "Mean",
+        difficulty: "Foundation / Core",
+        question: `The marks are: ${numbers.join(", ")}.\nWhat is the mean?`,
+        options,
+        correctIndex,
+        solution
+      };
+    }
+
+    // ---------- NEW: Phase 1 (Number) — 8 templates ----------
+    function makePercentOfAmountQuestion() {
+      const base = randInt(6, 60) * 5;
+      const percentChoices = [5, 10, 12, 15, 20, 25, 30, 35, 40, 45];
+      const p = percentChoices[randInt(0, percentChoices.length - 1)];
+      const correct = (p / 100) * base;
+
+      const { options, correctIndex } = buildMCQOptions(String(correct), [
+        String(Math.round(base * (100 / p))),
+        String(Math.round(base * (p / 10))),
+        String(Math.round(base + correct))
+      ]);
+
+      const solution = `${p}% of ${base} = ${p}/100 × ${base} = ${correct}`;
+
+      return {
+        topic: "Number",
+        skill: "Percentage of an amount",
+        difficulty: "Foundation / Core",
+        question: `Find ${p}% of ${base}.`,
+        options,
+        correctIndex,
+        solution
+      };
+    }
+
+    function makeDirectProportionQuestion() {
+      const a = randInt(2, 12);
+      const b = a * randInt(2, 8);
+      const costA = randInt(3, 25);
+      const unit = costA / a;
+      const correct = unit * b;
+
+      const correctText = `£${correct.toFixed(2)}`;
+      const { options, correctIndex } = buildMCQOptions(correctText, [
+        `£${(costA + b).toFixed(2)}`,
+        `£${(costA * b).toFixed(2)}`,
+        `£${(costA * (a / b)).toFixed(2)}`
+      ]);
+
+      const solution =
+        `1 item costs £${costA.toFixed(2)} ÷ ${a} = £${unit.toFixed(2)}\n` +
+        `${b} items cost ${b} × £${unit.toFixed(2)} = £${correct.toFixed(2)}`;
+
+      return {
+        topic: "Number",
+        skill: "Direct proportion",
+        difficulty: "Core / Intermediate",
+        question: `${a} identical pens cost £${costA.toFixed(2)}. How much do ${b} pens cost?`,
+        options,
+        correctIndex,
+        solution
+      };
+    }
+
+    function makeRoundingQuestion() {
+      const mode = Math.random() < 0.5 ? "dp" : "sf";
+      const number = (randInt(120, 999) + Math.random()).toFixed(4);
+      const x = parseFloat(number);
+
+      if (mode === "dp") {
+        const dp = randInt(1, 3);
+        const correct = x.toFixed(dp);
+        const { options, correctIndex } = buildMCQOptions(correct, [
+          x.toFixed(Math.max(0, dp - 1)),
+          x.toFixed(dp + 1),
+          (Math.floor(x * Math.pow(10, dp)) / Math.pow(10, dp)).toFixed(dp)
+        ]);
+
+        return {
+          topic: "Number",
+          skill: "Rounding (decimal places)",
+          difficulty: "Foundation / Core",
+          question: `Round ${number} to ${dp} decimal place${dp === 1 ? "" : "s"}.`,
+          options,
+          correctIndex,
+          solution: `${number} rounded to ${dp} dp is ${correct}.`
+        };
+      } else {
+        const sf = randInt(1, 3);
+        const correct = Number(x.toPrecision(sf)).toString();
+        const { options, correctIndex } = buildMCQOptions(correct, [
+          Number(x.toPrecision(Math.max(1, sf - 1))).toString(),
+          Number(x.toPrecision(sf + 1)).toString(),
+          Math.floor(x).toString()
+        ]);
+
+        return {
+          topic: "Number",
+          skill: "Rounding (significant figures)",
+          difficulty: "Foundation / Core",
+          question: `Round ${number} to ${sf} significant figure${sf === 1 ? "" : "s"}.`,
+          options,
+          correctIndex,
+          solution: `${number} rounded to ${sf} s.f. is ${correct}.`
+        };
+      }
+    }
+
+    function makeStandardFormQuestion() {
+      const coeff = (randInt(12, 98) / 10).toFixed(1);
+      const power = randInt(-4, 5);
+      const ordinary = (parseFloat(coeff) * Math.pow(10, power));
+      const ordinaryText = (Math.abs(ordinary) >= 1e-3 && Math.abs(ordinary) < 1e7)
+        ? ordinary.toString()
+        : ordinary.toExponential(3);
+
+      const correctText = `${coeff} × 10^${power}`;
+
+      const { options, correctIndex } = buildMCQOptions(correctText, [
+        `${(parseFloat(coeff) * 10).toFixed(1)} × 10^${power - 1}`,
+        `${coeff} × 10^${-power}`,
+        `${(parseFloat(coeff) / 10).toFixed(2)} × 10^${power + 1}`
+      ]);
+
+      const solution = `${ordinaryText} = ${coeff} × 10^${power} (standard form).`;
+
+      return {
+        topic: "Number",
+        skill: "Standard form (convert)",
+        difficulty: "Core / Intermediate",
+        question: `Write ${ordinaryText} in standard form.`,
+        options,
+        correctIndex,
+        solution
+      };
+    }
+
+    function makePowersRootsQuestion() {
+      const mode = Math.random() < 0.5 ? "power" : "root";
+
+      if (mode === "power") {
+        const bases = [2,3,4,5,6,7,8,9];
+        const b = bases[randInt(0, bases.length - 1)];
+        const n = randInt(2, 4);
+        const correct = Math.pow(b, n);
+
+        const { options, correctIndex } = buildMCQOptions(String(correct), [
+          String(b * n),
+          String(Math.pow(b, n - 1)),
+          String(Math.pow(n, b))
+        ]);
+
+        return {
+          topic: "Number",
+          skill: "Powers",
+          difficulty: "Foundation / Core",
+          question: `Evaluate: ${b}^${n}`,
+          options,
+          correctIndex,
+          solution: `${b}^${n} = ${correct}.`
+        };
+      } else {
+        const squares = [16,25,36,49,64,81,100,121,144,169,196,225];
+        const s = squares[randInt(0, squares.length - 1)];
+        const correct = Math.round(Math.sqrt(s));
+
+        const { options, correctIndex } = buildMCQOptions(String(correct), [
+          String(s / 2),
+          String(correct * 2),
+          String(correct - 1)
+        ]);
+
+        return {
+          topic: "Number",
+          skill: "Square roots",
+          difficulty: "Foundation / Core",
+          question: `Evaluate: √${s}`,
+          options,
+          correctIndex,
+          solution: `√${s} = ${correct} because ${correct} × ${correct} = ${s}.`
+        };
+      }
+    }
+
+    function makeBIDMASQuestion() {
+      const a = randInt(5, 30);
+      const b = randInt(2, 9);
+      const c = randInt(10, 30);
+      const d = randInt(1, 9);
+      const e = [2,3,4,5][randInt(0, 3)];
+      const inner = c - d;
+      const value = a + (b * inner) / e;
+
+      const correctText = Number.isInteger(value) ? String(value) : value.toFixed(2);
+
+      const wrong1 = ((a + b) * inner) / e;
+      const wrong2 = (a + b * inner) / e;
+      const wrong3 = a + b * inner / e + 1; // nudge to avoid duplicates
+
+      const { options, correctIndex } = buildMCQOptions(correctText, [
+        Number.isInteger(wrong1) ? String(wrong1) : wrong1.toFixed(2),
+        Number.isInteger(wrong2) ? String(wrong2) : wrong2.toFixed(2),
+        Number.isInteger(wrong3) ? String(wrong3) : wrong3.toFixed(2)
+      ]);
+
+      const solution =
+        `Work out brackets first: (${c} - ${d}) = ${inner}\n` +
+        `Then × and ÷: ${b} × ${inner} ÷ ${e} = ${(b * inner / e).toFixed(2).replace(/\.00$/, "")}\n` +
+        `Then add: ${a} + ${(b * inner / e).toFixed(2).replace(/\.00$/, "")} = ${correctText}`;
+
+      return {
+        topic: "Number",
+        skill: "BIDMAS / order of operations",
+        difficulty: "Core / Intermediate",
+        question: `Work out: ${a} + ${b} × (${c} - ${d}) ÷ ${e}`,
+        options,
+        correctIndex,
+        solution
+      };
+    }
+
+    function makeNegativeNumbersQuestion() {
+      const mode = randInt(1, 3);
+
+      if (mode === 1) {
+        const x = -randInt(3, 20);
+        const y = randInt(1, 20);
+        const op = Math.random() < 0.5 ? "+" : "-";
+        const correct = op === "+" ? x + y : x - y;
+
+        const { options, correctIndex } = buildMCQOptions(String(correct), [
+          String(-correct),
+          String(x + y),
+          String(x - y)
+        ]);
+
+        return {
+          topic: "Number",
+          skill: "Negative numbers (add/subtract)",
+          difficulty: "Foundation / Core",
+          question: `Work out: (${x}) ${op} ${y}`,
+          options,
+          correctIndex,
+          solution: `(${x}) ${op} ${y} = ${correct}`
+        };
+      } else if (mode === 2) {
+        const x = -randInt(2, 15);
+        const y = -randInt(2, 15);
+        const correct = x * y;
+
+        const { options, correctIndex } = buildMCQOptions(String(correct), [
+          String(-correct),
+          String(x + y),
+          String(correct - 1)
+        ]);
+
+        return {
+          topic: "Number",
+          skill: "Negative numbers (multiply)",
+          difficulty: "Foundation / Core",
+          question: `Work out: (${x}) × (${y})`,
+          options,
+          correctIndex,
+          solution: `Negative × negative = positive, so (${x}) × (${y}) = ${correct}`
+        };
+      } else {
+        const a = -randInt(2, 12);
+        const b = randInt(2, 12);
+        const c = -randInt(2, 12);
+        const correct = a + b + c;
+
+        const { options, correctIndex } = buildMCQOptions(String(correct), [
+          String(a + b - c),
+          String(a - b + c),
+          String(Math.abs(a) + b + Math.abs(c))
+        ]);
+
+        return {
+          topic: "Number",
+          skill: "Negative numbers (mixed)",
+          difficulty: "Foundation / Core",
+          question: `Work out: (${a}) + ${b} + (${c})`,
+          options,
+          correctIndex,
+          solution: `(${a}) + ${b} + (${c}) = ${correct}`
+        };
+      }
+    }
+
+    function makeEstimationQuestion() {
+      const x = (randInt(12, 98) / 10);
+      const y = (randInt(12, 98) / 10);
+
+      const x1sf = Number(x.toPrecision(1));
+      const y1sf = Number(y.toPrecision(1));
+      const estimate = x1sf * y1sf;
+
+      const correctText = String(estimate);
+
+      const { options, correctIndex } = buildMCQOptions(correctText, [
+        String(Number((x * y).toFixed(2))),
+        String(Number((Math.round(x) * Math.round(y)).toFixed(2))),
+        String(Number((Number(x.toPrecision(2)) * Number(y.toPrecision(2))).toFixed(2)))
+      ]);
+
+      const solution =
+        `Round to 1 s.f.: ${x} ≈ ${x1sf}, ${y} ≈ ${y1sf}\n` +
+        `Estimate ≈ ${x1sf} × ${y1sf} = ${estimate}`;
+
+      return {
+        topic: "Number",
+        skill: "Estimation (rounding)",
+        difficulty: "Foundation / Core",
+        question: `Estimate ${x} × ${y} by rounding each number to 1 significant figure.`,
+        options,
+        correctIndex,
+        solution
+      };
+    }
+
+    // ---------- Question bank registry ----------
+    const questionBank = [
+      // Existing
+      makePercentageIncreaseQuestion,
+      makeRatioShareQuestion,
+      makeLinearEquationQuestion,
+      makeRectangleAreaQuestion,
+      makePythagorasQuestion,
+      makeMeanQuestion,
+
+      // Phase 1 (Number) — 8 new templates
+      makePercentOfAmountQuestion,
+      makeDirectProportionQuestion,
+      makeRoundingQuestion,
+      makeStandardFormQuestion,
+      makePowersRootsQuestion,
+      makeBIDMASQuestion,
+      makeNegativeNumbersQuestion,
+      makeEstimationQuestion
+    ];
+
+    // ---------- App wiring ----------
+    let currentQuestion = null;
+
+    const topicSelect = document.getElementById("topicSelect");
+    const newQuestionBtn = document.getElementById("newQuestionBtn");
+    const showSolutionBtn = document.getElementById("showSolutionBtn");
+    const questionTextEl = document.getElementById("questionText");
+    const optionsListEl = document.getElementById("optionsList");
+    const solutionBlockEl = document.getElementById("solutionBlock");
+    const solutionTextEl = document.getElementById("solutionText");
+    const topicTagEl = document.getElementById("topicTag");
+    const skillTagEl = document.getElementById("skillTag");
+    const difficultyTextEl = document.getElementById("difficultyText");
+
+    function generateQuestion() {
+      const chosenTopic = topicSelect.value;
+      let availableFactories = questionBank;
+
+      if (chosenTopic !== "all") {
+        availableFactories = questionBank.filter(factory => {
+          const q = factory();
+          return q.topic === chosenTopic;
+        });
+      }
+
+      if (availableFactories.length === 0) {
+        questionTextEl.textContent = "No questions available yet for this topic.";
+        optionsListEl.innerHTML = "";
+        solutionBlockEl.style.display = "none";
+        topicTagEl.textContent = "";
+        skillTagEl.textContent = "";
+        difficultyTextEl.textContent = "";
+        return;
+      }
+
+      const factory = availableFactories[randInt(0, availableFactories.length - 1)];
+      currentQuestion = factory();
+
+      topicTagEl.textContent = currentQuestion.topic;
+      skillTagEl.textContent = currentQuestion.skill;
+      difficultyTextEl.textContent = currentQuestion.difficulty;
+
+      questionTextEl.textContent = currentQuestion.question;
+
+      optionsListEl.innerHTML = "";
+      const labels = ["A", "B", "C", "D"];
+      currentQuestion.options.forEach((opt, index) => {
+        const li = document.createElement("li");
+        li.innerHTML = `<span class="option-label">${labels[index]}.</span> ${opt}`;
+        optionsListEl.appendChild(li);
+      });
+
+      solutionTextEl.textContent = currentQuestion.solution;
+      solutionBlockEl.style.display = "none";
+    }
+
+    newQuestionBtn.addEventListener("click", generateQuestion);
+
+    showSolutionBtn.addEventListener("click", () => {
+      if (!currentQuestion) return;
+      solutionBlockEl.style.display = "block";
+    });
+  </script>
+</body>
+</html>
