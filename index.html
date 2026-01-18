@@ -1,396 +1,870 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en-GB">
 <head>
-  <meta charset="UTF-8" />
-  <title>Mr Nathan's GCSE Maths Question Bank</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Mr Nathan’s Maths Tuition IOM — GCSE WJEC Intermediate Tier Question Bank</title>
   <style>
-    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; margin: 0; padding: 0; background: #f5f7fb; }
-    .container { max-width: 900px; margin: 40px auto; background: #ffffff; padding: 24px 28px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-    h1 { margin-top: 0; font-size: 1.6rem; color: #134b9b; }
-    .subtitle { color: #555; margin-bottom: 16px; font-size: 0.95rem; }
-    .controls { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; align-items: center; }
-    select, button { padding: 8px 12px; font-size: 0.95rem; border-radius: 4px; border: 1px solid #c5cbe0; background: #ffffff; cursor: pointer; }
-    button { background: #134b9b; color: #fff; border: none; }
-    button:hover { background: #0f3f84; }
-    .meta { font-size: 0.9rem; color: #666; margin-bottom: 8px; }
-    .question-text { font-size: 1.05rem; margin: 12px 0 16px; white-space: pre-wrap; }
-    .options { list-style: none; padding: 0; margin: 0 0 16px; }
-    .options li { margin-bottom: 6px; }
-    .option-label { display: inline-block; width: 20px; font-weight: bold; }
-    .solution { border-top: 1px solid #dde3f5; margin-top: 12px; padding-top: 12px; display: none; font-size: 0.95rem; }
-    .solution pre { margin: 0; white-space: pre-wrap; font-family: inherit; }
-    .difficulty { font-weight: bold; }
-    .footer-note { margin-top: 20px; font-size: 0.8rem; color: #999; }
-    .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; background: #e7eefe; color: #134b9b; font-size: 0.75rem; margin-right: 6px; }
+    :root{
+      --bg:#0b1220;
+      --card:#121b2f;
+      --muted:#8ea3c7;
+      --text:#eaf1ff;
+      --line:#223154;
+      --accent:#59a6ff;
+      --good:#35d07f;
+      --warn:#ffcc66;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #081022, #0b1220 40%, #070d18);
+      color:var(--text);
+    }
+    header{
+      padding:18px 16px;
+      border-bottom:1px solid var(--line);
+      background: rgba(10,16,30,.75);
+      position:sticky;
+      top:0;
+      backdrop-filter: blur(10px);
+      z-index: 5;
+    }
+    header h1{
+      margin:0;
+      font-size:18px;
+      letter-spacing:.2px;
+    }
+    header p{
+      margin:6px 0 0 0;
+      color:var(--muted);
+      font-size:13px;
+    }
+    main{
+      max-width:980px;
+      margin:0 auto;
+      padding:16px;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:12px;
+    }
+    @media (min-width: 860px){
+      .grid{ grid-template-columns: 360px 1fr; align-items:start; }
+    }
+    .card{
+      background: rgba(18,27,47,.92);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:14px;
+      box-shadow: 0 10px 35px rgba(0,0,0,.25);
+    }
+    .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    label{
+      font-size:12px;
+      color:var(--muted);
+      display:block;
+      margin-bottom:6px;
+    }
+    select, button{
+      appearance:none;
+      border-radius:10px;
+      border:1px solid var(--line);
+      background:#0e1730;
+      color:var(--text);
+      padding:10px 12px;
+      font-size:14px;
+      outline:none;
+    }
+    select{ min-width: 260px; }
+    button{
+      cursor:pointer;
+      background: linear-gradient(180deg, #1a2a50, #111c36);
+    }
+    button.primary{
+      border-color:#2f6db7;
+      background: linear-gradient(180deg, #1b56a5, #123c78);
+    }
+    button:disabled{ opacity:.55; cursor:not-allowed; }
+    .pill{
+      font-size:12px;
+      color:var(--muted);
+      border:1px solid var(--line);
+      padding:6px 10px;
+      border-radius:999px;
+      background: rgba(6,10,18,.35);
+    }
+    .qbox{
+      padding:14px;
+      border-radius:12px;
+      border:1px dashed #2a3a62;
+      background: rgba(7,10,18,.35);
+      min-height: 150px;
+    }
+    .qbox h2{
+      margin:0 0 10px 0;
+      font-size:15px;
+      color:#cfe1ff;
+    }
+    .question{
+      font-size:20px;
+      line-height:1.35;
+      letter-spacing:.2px;
+      white-space:pre-wrap;
+    }
+    .answer{
+      margin-top:12px;
+      border-top:1px solid var(--line);
+      padding-top:12px;
+      color:#dfffe9;
+      font-size:18px;
+      line-height:1.35;
+      white-space:pre-wrap;
+      display:none;
+    }
+    .meta{
+      margin-top:10px;
+      color:var(--muted);
+      font-size:12px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .tiny{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.4;
+    }
+    .ok{ color: var(--good); }
+    .warn{ color: var(--warn); }
+    footer{
+      max-width:980px;
+      margin:0 auto;
+      padding:18px 16px 26px;
+      color:var(--muted);
+      font-size:12px;
+    }
+    a{ color: var(--accent); text-decoration:none; }
+    a:hover{ text-decoration:underline; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Mr Nathan's GCSE Maths Question Bank</h1>
-    <div class="subtitle">Intermediate Tier • Random, regeneratable MCQs with full worked solutions.</div>
+  <header>
+    <h1>Mr Nathan’s Maths Tuition IOM — GCSE WJEC Intermediate Tier Digital Question Bank</h1>
+    <p>NUMBER (exam-complete build) • GCSE-faithful formatting (fractions/mixed numbers, superscripts, standard form) • Even topic distribution in “All topics”.</p>
+  </header>
 
-    <div class="controls">
-      <label for="topicSelect">Topic:</label>
-      <select id="topicSelect">
-        <option value="all">(All topics)</option>
-        <option value="Number">Number</option>
-        <option value="Algebra">Algebra</option>
-        <option value="Geometry & Measure">Geometry & Measure</option>
-        <option value="Statistics & Probability">Statistics & Probability</option>
-      </select>
+  <main>
+    <div class="grid">
+      <section class="card">
+        <div class="row" style="justify-content:space-between; align-items:flex-end;">
+          <div style="flex:1; min-width:280px;">
+            <label for="topicSelect">Topic</label>
+            <select id="topicSelect"></select>
+          </div>
+          <div class="pill" id="topicCountPill">0 topics</div>
+        </div>
 
-      <button id="newQuestionBtn">New Question</button>
-      <button id="showSolutionBtn">Show Solution</button>
+        <div style="height:10px"></div>
+
+        <div class="row">
+          <button class="primary" id="btnNew">New question</button>
+          <button id="btnShow">Show answer</button>
+          <button id="btnHide" disabled>Hide answer</button>
+        </div>
+
+        <div style="height:10px"></div>
+
+        <div class="tiny">
+          <span class="ok">Formatting enforced:</span> no calculator notation, no e-notation, no caret powers, standard form as <span class="pill">a × 10ⁿ</span> with <span class="pill">1 ≤ a &lt; 10</span>, one decimal place on coefficient, no recurring decimals, non-integers as fractions/mixed numbers (unless decimals/money), money as <span class="pill">£x.xx</span>.
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="qbox">
+          <h2 id="qTitle">Question</h2>
+          <div class="question" id="qText">Click “New question”.</div>
+          <div class="answer" id="aText"></div>
+          <div class="meta">
+            <span class="pill" id="metaTopic">Topic: —</span>
+            <span class="pill" id="metaID">ID: —</span>
+          </div>
+        </div>
+      </section>
     </div>
+  </main>
 
-    <div class="meta">
-      <span id="topicTag" class="pill"></span>
-      <span id="skillTag" class="pill"></span>
-      <span class="difficulty">Difficulty: <span id="difficultyText"></span></span>
-    </div>
+  <footer>
+    Live site: <a href="https://goyaklaarchimedes.github.io/mr-nathan-gcse-question-bank/" target="_blank" rel="noopener">GitHub Pages</a>
+    • Repository: <a href="https://github.com/GoyaklaArchimedes/mr-nathan-gcse-question-bank" target="_blank" rel="noopener">mr-nathan-gcse-question-bank</a>
+  </footer>
 
-    <div class="question-text" id="questionText">Click “New Question” to begin.</div>
-    <ul class="options" id="optionsList"></ul>
+<script>
+/* =========================
+   Utilities (GCSE-faithful)
+   ========================= */
 
-    <div class="solution" id="solutionBlock">
-      <strong>Worked solution</strong>
-      <pre id="solutionText"></pre>
-    </div>
+function randInt(min, max){ // inclusive
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
-    <div class="footer-note">This is a growing question bank. Next goal: make Number fully exam-complete for WJEC GCSE Intermediate Tier.</div>
-  </div>
+function choice(arr){
+  return arr[randInt(0, arr.length - 1)];
+}
 
-  <script>
-    // ---------- Utilities ----------
-    function randInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+function shuffle(arr){
+  for(let i = arr.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
 
-    function shuffleArray(arr) {
-      const copy = arr.slice();
-      for (let i = copy.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [copy[i], copy[j]] = [copy[j], copy[i]];
-      }
-      return copy;
-    }
+function gcd(a, b){
+  a = Math.abs(a); b = Math.abs(b);
+  while(b !== 0){ const t = a % b; a = b; b = t; }
+  return a;
+}
 
-    function buildMCQOptions(correctText, distractorTexts) {
-      const all = [String(correctText), ...distractorTexts.map(String)];
-      const shuffled = shuffleArray(all);
-      return { options: shuffled, correctIndex: shuffled.findIndex(v => v === String(correctText)) };
-    }
+function lcm(a, b){
+  return Math.abs(a / gcd(a,b) * b);
+}
 
-    function gcd(a, b) {
-      a = Math.abs(a); b = Math.abs(b);
-      while (b !== 0) { const t = b; b = a % b; a = t; }
-      return a;
-    }
+const SUP = {
+  "0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹","-":"⁻"
+};
+function toSuperscript(n){
+  const s = String(n);
+  return s.split("").map(ch => SUP[ch] ?? ch).join("");
+}
 
-    function simplifyFraction(n, d) {
-      const g = gcd(n, d);
-      return { n: n / g, d: d / g };
-    }
+class Fraction {
+  constructor(n, d=1){
+    if(d === 0) throw new Error("Denominator 0");
+    // normalise sign to numerator
+    if(d < 0){ n = -n; d = -d; }
+    const g = gcd(n, d);
+    this.n = n / g;
+    this.d = d / g;
+  }
+  static fromInt(n){ return new Fraction(n, 1); }
+  add(o){ return new Fraction(this.n*o.d + o.n*this.d, this.d*o.d); }
+  sub(o){ return new Fraction(this.n*o.d - o.n*this.d, this.d*o.d); }
+  mul(o){ return new Fraction(this.n*o.n, this.d*o.d); }
+  div(o){ return new Fraction(this.n*o.d, this.d*o.n); }
+  abs(){ return new Fraction(Math.abs(this.n), this.d); }
+  isInt(){ return this.d === 1; }
+  sign(){ return this.n === 0 ? 0 : (this.n > 0 ? 1 : -1); }
+  toMixedString(){
+    // GCSE style: simplified fraction or mixed number
+    if(this.n === 0) return "0";
+    const neg = this.n < 0;
+    const an = Math.abs(this.n);
+    const whole = Math.floor(an / this.d);
+    const rem = an % this.d;
+    if(rem === 0) return (neg ? "-" : "") + String(whole);
+    if(whole === 0) return (neg ? "-" : "") + `${rem}/${this.d}`;
+    return (neg ? "-" : "") + `${whole} ${rem}/${this.d}`;
+  }
+  toFractionString(){
+    if(this.d === 1) return String(this.n);
+    return `${this.n}/${this.d}`;
+  }
+}
 
-    function sup(x) { return `<sup>${x}</sup>`; }
+function moneyFromPence(p){
+  const neg = p < 0;
+  const ap = Math.abs(p);
+  const pounds = Math.floor(ap / 100);
+  const pennies = ap % 100;
+  return (neg ? "-" : "") + "£" + String(pounds) + "." + String(pennies).padStart(2, "0");
+}
 
-    function fractionToMixedString(n, d) {
-      // assumes d>0
-      const sign = n < 0 ? "-" : "";
-      const absN = Math.abs(n);
-      const whole = Math.floor(absN / d);
-      const rem = absN % d;
-      if (rem === 0) return sign + String(whole);
-      if (whole === 0) return sign + `${rem}/${d}`;
-      return sign + `${whole} ${rem}/${d}`;
-    }
+function percentFromFraction(fr){
+  // expects exact rational percent (e.g. 3/4 => 75%)
+  // we'll only use where it is exact as an integer percent
+  const n = fr.n, d = fr.d;
+  const val = 100 * n;
+  if(val % d !== 0) throw new Error("Non-integer percent requested");
+  return `${val / d}%`;
+}
 
-    function formatFractionOrMixed(n, d) {
-      const simp = simplifyFraction(n, d);
-      return fractionToMixedString(simp.n, simp.d);
-    }
+/* =========================
+   Standard Form (one decimal)
+   Represent coefficient as integer 'tenths' (10..99) meaning tenths/10
+   ========================= */
 
-    function safeMoney(x) {
-      return `£${(Math.round((x + Number.EPSILON) * 100) / 100).toFixed(2)}`;
-    }
+function normaliseStdForm(tenths, exp){
+  // tenths is integer, can be any positive integer
+  if(tenths === 0) return { tenths: 0, exp: 0 };
+  while(tenths >= 100){
+    tenths = Math.round(tenths / 10);
+    exp += 1;
+  }
+  while(tenths < 10){
+    tenths *= 10;
+    exp -= 1;
+  }
+  // Ensure within 10..99 and ONE decimal display
+  if(tenths >= 100){ // in case rounding pushed it
+    tenths = Math.round(tenths / 10);
+    exp += 1;
+  }
+  if(tenths < 10){
+    tenths *= 10;
+    exp -= 1;
+  }
+  return { tenths, exp };
+}
 
-    // ---------- GCSE Standard Form helpers ----------
-    function normaliseSci(coeff, power) {
-      let c = coeff;
-      let p = power;
-      const EPS = 1e-12;
+function stdFormToString(tenths, exp){
+  // tenths integer -> coefficient with 1 dp
+  const a = (tenths / 10).toFixed(1);
+  return `${a} × 10${toSuperscript(exp)}`;
+}
 
-      while (c >= 10 - EPS) { c /= 10; p += 1; }
-      while (c < 1 - EPS) { c *= 10; p -= 1; }
+function multiplyStdForm(a1, e1, a2, e2){
+  // (a1/10)*10^e1 * (a2/10)*10^e2 = (a1*a2)/100 * 10^(e1+e2)
+  // = (a1*a2)/10 * 10^(e1+e2-1)  => coefficient tenths = a1*a2, exp = e1+e2-1
+  let tenths = a1 * a2;
+  let exp = e1 + e2 - 1;
+  const norm = normaliseStdForm(tenths, exp);
+  return norm;
+}
 
-      // keep 1 dp (your preference) and re-check
-      c = Math.round(c * 10) / 10;
-      if (c >= 10) { c /= 10; p += 1; }
+function divideStdForm(a1, e1, a2, e2){
+  // (a1/10*10^e1)/(a2/10*10^e2) = (a1/a2)*10^(e1-e2)
+  // Convert to tenths with exactness by scaling numerator.
+  // We'll choose friendly numbers so (a1*10) divisible by a2 to give a one-decimal coefficient.
+  const expBase = e1 - e2;
+  const num = a1 * 10; // gives one extra dp
+  if(num % a2 !== 0) throw new Error("Non-terminating division in std form (avoid by choosing friendly numbers).");
+  let tenths = num / a2; // now tenths/10 is coefficient
+  let exp = expBase - 1; // because we multiplied numerator by 10 (i.e. ×10), so reduce exponent by 1
+  const norm = normaliseStdForm(tenths, exp);
+  return norm;
+}
 
-      return { coeff: c, power: p };
-    }
+/* =========================
+   Question bank (NUMBER)
+   Implemented as topic->generators.
+   Each generator returns: { id, q, a }
+   ========================= */
 
-    function sciHTML(coeff, power) {
-      const norm = normaliseSci(coeff, power);
-      const cStr = norm.coeff.toFixed(1); // 2.0 style
-      return `${cStr} × 10${sup(norm.power)}`;
-    }
+function makeID(prefix){
+  const t = Date.now().toString(36).slice(-6);
+  const r = Math.random().toString(36).slice(2,6);
+  return `${prefix}-${t}-${r}`.toUpperCase();
+}
 
-    function coeffPowerToPlainDecimal(coeffStr, power) {
-      // Build a decimal string WITHOUT e-notation
-      const dotIndex = coeffStr.indexOf(".");
-      const digitsBeforeDot = (dotIndex === -1) ? coeffStr.length : dotIndex;
-      const digitsOnly = coeffStr.replace(".", "");
-      const totalDigits = digitsOnly.length;
+/* ---- Topic generators ---- */
 
-      const newDecimalPos = digitsBeforeDot + power;
+// 1) Reverse percentages
+function qReversePercentMoney(){
+  // final price after increase/decrease; find original. Use p values that give exact pence.
+  const kind = choice(["increase", "decrease"]);
+  const pct = choice([5,10,20,25,50]); // friendly
+  // Choose original in pence divisible appropriately:
+  // original * (100±pct)/100 = final => original = final *100/(100±pct)
+  // choose final so original is integer pence
+  const mult = (kind === "increase") ? (100 + pct) : (100 - pct);
+  // pick an original in pence that's multiple of mult to make final integer:
+  const originalPence = mult * choice([120,150,180,200,250,300,350,400,450]); // sizeable
+  const finalPence = Math.floor(originalPence * mult / 100); // WAIT: that's wrong. final = original * mult/100
+  // correct:
+  const finalPence2 = Math.floor(originalPence * mult / 100);
+  // Now reverse: original = final*100/mult, should be exact
+  const q = `A price is ${kind === "increase" ? "increased" : "reduced"} by ${pct}% and becomes ${moneyFromPence(finalPence2)}.\nWhat was the original price?`;
+  const a = `Original price = ${moneyFromPence(originalPence)}.`;
+  return { id: makeID("REV%"), q, a };
+}
 
-      if (newDecimalPos >= totalDigits) {
-        const zeros = "0".repeat(newDecimalPos - totalDigits);
-        return digitsOnly + zeros;
-      }
-      if (newDecimalPos <= 0) {
-        const zeros = "0".repeat(-newDecimalPos);
-        return "0." + zeros + digitsOnly;
-      }
+function qReversePercentNonMoney(){
+  const pct = choice([10,20,25,50]);
+  const kind = choice(["increase", "decrease"]);
+  const mult = (kind === "increase") ? (100 + pct) : (100 - pct);
+  // choose original as integer so final integer
+  const original = mult * choice([3,4,5,6,8,9,10,12]);
+  const finalVal = original * mult / 100;
+  const q = `A number is ${kind === "increase" ? "increased" : "decreased"} by ${pct}% and becomes ${finalVal}.\nWhat was the original number?`;
+  const a = `Original number = ${original}.`;
+  return { id: makeID("REV%"), q, a };
+}
 
-      const left = digitsOnly.slice(0, newDecimalPos);
-      const right = digitsOnly.slice(newDecimalPos).replace(/0+$/, "");
-      return right.length ? (left + "." + right) : left;
-    }
+// 2) Percentage change wording (increase/decrease, percent change, new value)
+function qPercentChange(){
+  const mode = choice(["find-percent-change","find-new-after-change","find-old-given-change"]);
+  if(mode === "find-percent-change"){
+    const oldVal = choice([40,50,60,80,100,120,150,200]);
+    const change = choice([5,10,15,20,25,30,40,50]);
+    const dir = choice(["increase","decrease"]);
+    const newVal = dir === "increase" ? oldVal + change : oldVal - change;
+    // make percent nice: change/old *100 integer
+    // enforce divisibility:
+    if((change*100) % oldVal !== 0) return qPercentChange();
+    const pct = (change*100) / oldVal;
+    const q = `A value changes from ${oldVal} to ${newVal}.\nWhat is the percentage ${dir === "increase" ? "increase" : "decrease"}?`;
+    const a = `Percentage change = ${pct}%.`;
+    return { id: makeID("PCHG"), q, a };
+  }
+  if(mode === "find-new-after-change"){
+    const oldVal = choice([60,80,100,120,150,200,250]);
+    const pct = choice([5,10,12,15,20,25,30,40]);
+    const dir = choice(["increase","decrease"]);
+    // choose to keep new integer
+    const mult = dir === "increase" ? (100 + pct) : (100 - pct);
+    if((oldVal * mult) % 100 !== 0) return qPercentChange();
+    const newVal = (oldVal * mult) / 100;
+    const q = `A value of ${oldVal} is ${dir === "increase" ? "increased" : "decreased"} by ${pct}%.\nWhat is the new value?`;
+    const a = `New value = ${newVal}.`;
+    return { id: makeID("PCHG"), q, a };
+  }
+  // find-old-given-change (reverse percent but non-money wording)
+  const pct = choice([10,20,25,50]);
+  const dir = choice(["increase","decrease"]);
+  const mult = dir === "increase" ? (100 + pct) : (100 - pct);
+  const oldVal = mult * choice([2,3,4,5,6,8,10]);
+  const newVal = (oldVal * mult) / 100;
+  const q = `After a ${pct}% ${dir === "increase" ? "increase" : "decrease"}, the value becomes ${newVal}.\nWhat was the value before the change?`;
+  const a = `Value before the change = ${oldVal}.`;
+  return { id: makeID("PCHG"), q, a };
+}
 
-    // ---------- Templates ----------
-    // NUMBER: Powers (fixed superscripts)
-    function makePowersQuestion() {
-      const b = [2,3,4,5,6,7,8,9][randInt(0,7)];
-      const n = randInt(2,4);
-      const correct = Math.pow(b, n);
+// 3) Ratio simplification
+function qRatioSimplify(){
+  const k = choice([2,3,4,5,6,7,8,9,10,12]);
+  const a = k * choice([2,3,4,5,6]);
+  const b = k * choice([3,4,5,6,7]);
+  const g = gcd(a,b);
+  const q = `Simplify the ratio ${a} : ${b}.`;
+  const ansA = a / g, ansB = b / g;
+  const aTxt = `Simplified ratio = ${ansA} : ${ansB}.`;
+  return { id: makeID("RATIO"), q, a: aTxt };
+}
 
-      const { options, correctIndex } = buildMCQOptions(String(correct), [
-        String(b * n),
-        String(Math.pow(b, n - 1)),
-        String(correct + b)
-      ]);
+// 4) Best buy / unit pricing (money)
+function qBestBuy(){
+  // Use grams or ml with nice pence
+  const item = choice([
+    {name:"rice", unit:"g", base:1000},
+    {name:"coffee", unit:"g", base:500},
+    {name:"orange juice", unit:"ml", base:1000},
+    {name:"washing powder", unit:"g", base:1000}
+  ]);
+  // Create two packs with different sizes and prices (pence)
+  const size1 = choice([250,400,500,750,1000]);
+  const size2 = choice([300,450,600,900,1200]);
+  const price1 = randInt(150, 650) * 1; // pence
+  const price2 = randInt(180, 720) * 1;
+  // Avoid same unit price
+  const up1 = new Fraction(price1, size1);
+  const up2 = new Fraction(price2, size2);
+  if(up1.n * up2.d === up2.n * up1.d) return qBestBuy();
 
-      return {
-        topic: "Number",
-        skill: "Powers",
-        difficulty: "Foundation / Core",
-        questionHTML: `Evaluate: ${b}${sup(n)}`,
-        optionsHTML: options,
-        correctIndex,
-        solutionHTML: `${b}${sup(n)} = ${correct}.`
-      };
-    }
+  // Compare without decimals:
+  const left = up1.n * up2.d;
+  const right = up2.n * up1.d;
+  const better = (left < right) ? "A" : "B";
 
-    // NUMBER: Percentage of amount (prevents floating rubbish)
-    function makePercentOfAmountQuestion() {
-      const base = randInt(6, 60) * 5;
-      const p = [5,10,12,15,20,25,30,35,40,45][randInt(0,9)];
+  const q =
+`Best buy:
+A) ${size1}${item.unit} of ${item.name} for ${moneyFromPence(price1)}
+B) ${size2}${item.unit} of ${item.name} for ${moneyFromPence(price2)}
+Which is better value?`;
 
-      // exact rational: p/100 * base = (p*base)/100
-      const num = p * base;
-      const den = 100;
-      const simp = simplifyFraction(num, den);
-      const mixed = fractionToMixedString(simp.n, simp.d);
+  // Provide unit prices as simplified fractions in £ per unit? That’s awkward.
+  // Provide pence per 100g/ml as money (exact), using integer scaling.
+  const scale = 100; // per 100 units
+  const p100_1 = new Fraction(price1 * scale, size1);
+  const p100_2 = new Fraction(price2 * scale, size2);
+  // Ensure they are exact pence integers for display as £:
+  // We'll display as pence per 100 units as a fraction of pence if needed? Prefer money; choose until divisible.
+  if((price1 * scale) % size1 !== 0) return qBestBuy();
+  if((price2 * scale) % size2 !== 0) return qBestBuy();
+  const unit1 = (price1 * scale) / size1;
+  const unit2 = (price2 * scale) / size2;
 
-      const { options, correctIndex } = buildMCQOptions(mixed, [
-        fractionToMixedString(...Object.values(simplifyFraction(base * 100, p))), // nonsense inverse
-        String(base + p),                                                         // classic error
-        String(Math.round((p/10)*base))                                           // /10 mistake
-      ]);
+  const a =
+`Better value: Option ${better}.
+Cost per ${scale}${item.unit}:
+A) ${moneyFromPence(unit1)}
+B) ${moneyFromPence(unit2)}`;
 
-      return {
-        topic: "Number",
-        skill: "Percentage of an amount",
-        difficulty: "Foundation / Core",
-        questionHTML: `Find ${p}% of ${base}.`,
-        optionsHTML: options,
-        correctIndex,
-        solutionHTML:
-          `${p}% of ${base} = ${p}/100 × ${base}\n` +
-          `= ${p * base}/100 = ${mixed}`
-      };
-    }
+  return { id: makeID("BEST"), q, a };
+}
 
-    // NUMBER: Standard form (already GCSE, with superscripts + 2.0 style)
-    function makeStandardFormQuestion() {
-      const coeff = (randInt(12, 98) / 10);   // 1.2 .. 9.8
-      const power = randInt(-4, 5);
+// 5) Fraction calculations (add/subtract, simplify)
+function qFracAddSub(){
+  const op = choice(["+","−"]);
+  const d1 = choice([4,5,6,8,10,12]);
+  const d2 = choice([3,4,6,8,9,12]);
+  const n1 = randInt(1, d1-1);
+  const n2 = randInt(1, d2-1);
+  const f1 = new Fraction(n1, d1);
+  const f2 = new Fraction(n2, d2);
+  const res = (op === "+") ? f1.add(f2) : f1.sub(f2);
+  // Keep positive and non-trivial
+  if(res.n <= 0) return qFracAddSub();
+  const q = `Work out: ${n1}/${d1} ${op} ${n2}/${d2}\nGive your answer in its simplest form.`;
+  const a = `Answer = ${res.toMixedString()}.`;
+  return { id: makeID("FRAC"), q, a };
+}
 
-      const coeffStr = coeff.toFixed(1);
-      const ordinaryText = coeffPowerToPlainDecimal(coeffStr, power);
-      const correctHTML = sciHTML(coeff, power);
+function qFracOfAmount(){
+  // e.g. 3/4 of 56, or 5/6 of 72
+  const frac = choice([new Fraction(3,4), new Fraction(2,3), new Fraction(5,6), new Fraction(7,8), new Fraction(3,5)]);
+  const base = choice([24,36,48,56,60,72,80,90,96,120]);
+  // ensure divisible:
+  if((base * frac.n) % frac.d !== 0) return qFracOfAmount();
+  const ans = (base * frac.n) / frac.d;
+  const q = `Find ${frac.toFractionString()} of ${base}.`;
+  const a = `Answer = ${ans}.`;
+  return { id: makeID("FRAC"), q, a };
+}
 
-      const d1 = sciHTML(coeff, -power);
-      const d2 = sciHTML(coeff * 10, power);
-      const d3 = sciHTML(coeff / 10, power);
+// 6) Standard form calculations (× and ÷)
+function qStdFormMultiply(){
+  // Choose tenths 12..95 and exponents, keep nice
+  const a1 = choice([12,15,18,20,25,30,35,40,45,50,60,75,90]);
+  const a2 = choice([12,15,18,20,25,30,40,50,60,75]);
+  const e1 = randInt(-3, 5);
+  const e2 = randInt(-3, 5);
+  const left = stdFormToString(a1, e1);
+  const right = stdFormToString(a2, e2);
+  const prod = multiplyStdForm(a1, e1, a2, e2);
+  const q = `Work out:\n(${left}) × (${right})\nGive your answer in standard form.`;
+  const a = `Answer = ${stdFormToString(prod.tenths, prod.exp)}.`;
+  return { id: makeID("SF×"), q, a };
+}
 
-      const distractors = Array.from(new Set([d1, d2, d3].filter(v => v !== correctHTML)));
-      while (distractors.length < 3) distractors.push(sciHTML(randInt(12,98)/10, randInt(-6,6)));
+function qStdFormDivide(){
+  // Pick friendly divisions so (a1*10) divisible by a2
+  const a2 = choice([12,15,20,25,30,40,50,60,75]);
+  let a1 = choice([12,15,18,20,24,25,30,36,40,45,50,60,75,80,90]);
+  // enforce divisibility for exact one-decimal coefficient after division
+  // Need (a1*10) % a2 == 0
+  let tries = 0;
+  while(((a1*10) % a2) !== 0 && tries < 20){
+    a1 = choice([12,15,18,20,24,25,30,36,40,45,50,60,75,80,90]);
+    tries++;
+  }
+  if(((a1*10) % a2) !== 0) return qStdFormDivide();
+  const e1 = randInt(-2, 6);
+  const e2 = randInt(-2, 6);
+  const left = stdFormToString(a1, e1);
+  const right = stdFormToString(a2, e2);
+  let res;
+  try{
+    res = divideStdForm(a1, e1, a2, e2);
+  }catch(e){
+    return qStdFormDivide();
+  }
+  const q = `Work out:\n(${left}) ÷ (${right})\nGive your answer in standard form.`;
+  const a = `Answer = ${stdFormToString(res.tenths, res.exp)}.`;
+  return { id: makeID("SF÷"), q, a };
+}
 
-      const { options, correctIndex } = buildMCQOptions(correctHTML, distractors.slice(0,3));
+// 7) Bounds (upper/lower, error intervals)
+function qBoundsRounded(){
+  // A length rounded to 1 dp or nearest cm etc.
+  const type = choice(["1dp","nearest cm","nearest 10"]);
+  if(type === "1dp"){
+    const x = choice([12.3, 4.7, 8.1, 15.6, 20.0, 9.9]);
+    // represent as integer tenths
+    const tenths = Math.round(x * 10);
+    const low = new Fraction(tenths*10 - 5, 100);  // (x - 0.05)
+    const high = new Fraction(tenths*10 + 5, 100); // (x + 0.05)
+    const q = `A length is given as ${x.toFixed(1)} cm, correct to 1 decimal place.\nWrite the error interval for the length, L.`;
+    const a = `${low.toMixedString()} ≤ L < ${high.toMixedString()}`;
+    return { id: makeID("BND"), q, a };
+  }
+  if(type === "nearest cm"){
+    const cm = choice([24, 35, 48, 63, 80, 92]);
+    const low = cm - 0.5;
+    const high = cm + 0.5;
+    const q = `A length is given as ${cm} cm, correct to the nearest centimetre.\nWrite the error interval for the length, L.`;
+    const a = `${low} ≤ L < ${high}`;
+    return { id: makeID("BND"), q, a };
+  }
+  // nearest 10 (integer)
+  const n = choice([120, 350, 680, 910, 1040]);
+  const low = n - 5;
+  const high = n + 5;
+  const q = `A number is given as ${n}, correct to the nearest 10.\nWrite the error interval for the number, x.`;
+  const a = `${low} ≤ x < ${high}`;
+  return { id: makeID("BND"), q, a };
+}
 
-      // Special case: if the number is 2 (or any integer), still show standard form as 2.0 × 10^0
-      // (This happens rarely with our generator, but the rule is now consistent.)
-      return {
-        topic: "Number",
-        skill: "Standard form (convert)",
-        difficulty: "Core / Intermediate",
-        questionHTML: `Write ${ordinaryText} in standard form.`,
-        optionsHTML: options,
-        correctIndex,
-        solutionHTML:
-          `Standard form is a × 10ⁿ where 1 ≤ a < 10.\n` +
-          `${ordinaryText} = ${correctHTML}`
-      };
-    }
+function qBoundsUpperLowerCalc(){
+  // Use bounds to find upper/lower bound of an expression
+  // Example: x = 8.4 correct to 1 dp, y = 3.2 correct to 1 dp, find upper bound of x + y
+  const x = choice([8.4, 12.1, 6.7, 15.3]);
+  const y = choice([3.2, 4.5, 2.8, 7.6]);
+  const xt = Math.round(x*10), yt = Math.round(y*10);
+  const xL = (xt - 0.5) / 10, xU = (xt + 0.5) / 10;
+  const yL = (yt - 0.5) / 10, yU = (yt + 0.5) / 10;
+  const expr = choice(["x + y","x − y"]);
+  if(expr === "x − y"){
+    const upper = xU - yL;
+    const lower = xL - yU;
+    const q = `x = ${x.toFixed(1)} correct to 1 decimal place\n` +
+              `y = ${y.toFixed(1)} correct to 1 decimal place\n` +
+              `Find the upper and lower bounds of (x − y).`;
+    const a = `Lower bound = ${lower}\nUpper bound = ${upper}`;
+    return { id: makeID("BND"), q, a };
+  }else{
+    const lower = xL + yL;
+    const upper = xU + yU;
+    const q = `x = ${x.toFixed(1)} correct to 1 decimal place\n` +
+              `y = ${y.toFixed(1)} correct to 1 decimal place\n` +
+              `Find the upper and lower bounds of (x + y).`;
+    const a = `Lower bound = ${lower}\nUpper bound = ${upper}`;
+    return { id: makeID("BND"), q, a };
+  }
+}
 
-    // STATS: Mean (now exact fraction/mixed number, no recurring decimals)
-    function makeMeanQuestion() {
-      const n = randInt(4, 6);
-      const numbers = Array.from({length:n}, () => randInt(2, 15));
-      const sum = numbers.reduce((a,b)=>a+b,0);
+// 8) Mixed multi-step Number questions
+function qMultiStepPercentThenFraction(){
+  // Increase by %, then take a fraction, keep integer money in pence
+  const pence = choice([1200, 1500, 1800, 2000, 2400, 3000, 3600, 4500]); // £12.00 etc
+  const pct = choice([10, 20, 25, 50]);
+  const mult = 100 + pct;
+  const newPence = (pence * mult) / 100;
+  const frac = choice([new Fraction(1,2), new Fraction(3,4), new Fraction(2,3)]);
+  if((newPence * frac.n) % frac.d !== 0) return qMultiStepPercentThenFraction();
+  const finalPence = (newPence * frac.n) / frac.d;
+  const q =
+`A jacket costs ${moneyFromPence(pence)}.
+It is increased by ${pct}%.
+Then ${frac.toFractionString()} of the new price is paid using a voucher.
+How much is paid after using the voucher?`;
+  const a = `Amount paid = ${moneyFromPence(finalPence)}.`;
+  return { id: makeID("MIX"), q, a };
+}
 
-      // exact mean = sum/n
-      const meanText = formatFractionOrMixed(sum, n);
+function qMultiStepRatioShare(){
+  // Share an amount in a ratio; ensure integer shares.
+  const a = choice([2,3,4,5]);
+  const b = choice([3,4,5,6,7]);
+  const totalParts = a + b;
+  const unit = choice([6,8,10,12,15,18,20]);
+  const total = totalParts * unit;
+  const shareA = a * unit;
+  const shareB = b * unit;
+  const q = `£${total} is shared between Ali and Ben in the ratio ${a} : ${b}.\nHow much does each person receive?`;
+  const ans = `Ali receives £${shareA}\nBen receives £${shareB}`;
+  return { id: makeID("MIX"), q, a: ans };
+}
 
-      const { options, correctIndex } = buildMCQOptions(meanText, [
-        String(sum),
-        String(numbers[0]),
-        String(numbers[numbers.length - 1])
-      ]);
+function qMultiStepStdFormThenRound(){
+  const a = choice([15,20,25,30,45,60,75,90]); // tenths
+  const e = randInt(2, 7);
+  const numberStr = stdFormToString(a, e);
+  // Convert to integer (since a has 1 dp):
+  // (a/10)*10^e = a * 10^(e-1)
+  const value = a * Math.pow(10, e-1); // integer
+  const place = choice(["nearest 10","nearest 100","nearest 1000"]);
+  let rounded;
+  if(place === "nearest 10") rounded = Math.round(value / 10) * 10;
+  if(place === "nearest 100") rounded = Math.round(value / 100) * 100;
+  if(place === "nearest 1000") rounded = Math.round(value / 1000) * 1000;
+  const q = `Write ${numberStr} as an ordinary number, then round it to the ${place}.`;
+  const aTxt = `Ordinary number = ${value}\nRounded = ${rounded}`;
+  return { id: makeID("MIX"), q, a: aTxt };
+}
 
-      return {
-        topic: "Statistics & Probability",
-        skill: "Mean",
-        difficulty: "Foundation / Core",
-        questionHTML: `The marks are: ${numbers.join(", ")}.\nWhat is the mean?`,
-        optionsHTML: options,
-        correctIndex,
-        solutionHTML:
-          `Sum = ${sum}\n` +
-          `Mean = ${sum} ÷ ${n} = ${sum}/${n}\n` +
-          `= ${meanText}`
-      };
-    }
+/* ---- Existing/Support Number Topics (kept solid) ---- */
 
-    // ALGEBRA: simple linear equation (kept)
-    function makeLinearEquationQuestion() {
-      const a = randInt(2, 9);
-      const x = randInt(-5, 8);
-      const b = randInt(-10, 12);
-      const c = a * x + b;
+function qIndicesEvaluate(){
+  // No caret; use superscripts
+  const base = choice([2,3,4,5,6,7,8,9,10]);
+  const power = choice([2,3,4,5]);
+  const value = Math.pow(base, power);
+  const q = `Evaluate: ${base}${toSuperscript(power)}`;
+  const a = `Answer = ${value}.`;
+  return { id: makeID("IDX"), q, a };
+}
 
-      const correct = x;
-      const wrong1 = Math.round((c - b) / (a + 1));
-      const wrong2 = c - b;
-      const wrong3 = Math.round((c + b) / a);
+function qStdFormConvert(){
+  // Convert ordinary number to standard form with one decimal coefficient
+  const exp = randInt(1, 7);
+  const coeffTenths = choice([10,12,15,18,20,25,30,35,40,45,50,60,75,90,99]);
+  // ordinary = coeffTenths * 10^(exp-1)
+  const ordinary = coeffTenths * Math.pow(10, exp-1);
+  const q = `Write ${ordinary} in standard form.`;
+  const a = `Answer = ${stdFormToString(coeffTenths, exp)}.`;
+  return { id: makeID("SF"), q, a };
+}
 
-      const { options, correctIndex } = buildMCQOptions(String(correct), [
-        String(wrong1),
-        String(wrong2),
-        String(wrong3)
-      ]);
+function qMeanAsFraction(){
+  // Ensure mean not recurring: pick total divisible by count
+  const count = choice([4,5,6]);
+  const mean = choice([7, 8, 9, 10, 11, 12, 13]);
+  const total = mean * count;
+  // generate numbers summing to total
+  let nums = [];
+  let remaining = total;
+  for(let i=0;i<count-1;i++){
+    const v = randInt(1, Math.max(1, remaining - (count-1-i)));
+    nums.push(v);
+    remaining -= v;
+  }
+  nums.push(remaining);
+  shuffle(nums);
+  // Sometimes too messy; keep within 1..20
+  if(nums.some(n => n<0 || n>20)) return qMeanAsFraction();
 
-      return {
-        topic: "Algebra",
-        skill: "Solving linear equations",
-        difficulty: "Core / Intermediate",
-        questionHTML: `Solve: ${a}x + (${b}) = ${c}`,
-        optionsHTML: options,
-        correctIndex,
-        solutionHTML:
-          `${a}x = ${c} - (${b}) = ${c - b}\n` +
-          `x = ${c - b} ÷ ${a} = ${correct}`
-      };
-    }
+  const q = `The marks are: ${nums.join(", ")}.\nWhat is the mean?`;
+  const a = `Mean = ${mean}.`;
+  return { id: makeID("MEAN"), q, a };
+}
 
-    // GEOMETRY: area of rectangle (kept)
-    function makeRectangleAreaQuestion() {
-      const length = randInt(4, 20);
-      const width = randInt(3, 15);
-      const correct = length * width;
+function qUnitFractionOfNumber(){
+  const denom = choice([2,3,4,5,6,8,10,12]);
+  const base = denom * choice([6,7,8,9,10,12]);
+  const ans = base / denom;
+  const q = `Find 1/${denom} of ${base}.`;
+  const a = `Answer = ${ans}.`;
+  return { id: makeID("FRAC"), q, a };
+}
 
-      const { options, correctIndex } = buildMCQOptions(`${correct} cm²`, [
-        `${length + width} cm²`,
-        `${2 * (length + width)} cm²`,
-        `${length * length} cm²`
-      ]);
+/* =========================
+   Topic map (NUMBER)
+   ========================= */
 
-      return {
-        topic: "Geometry & Measure",
-        skill: "Area of a rectangle",
-        difficulty: "Foundation",
-        questionHTML: `A rectangle has length ${length} cm and width ${width} cm. What is its area?`,
-        optionsHTML: options,
-        correctIndex,
-        solutionHTML: `Area = ${length} × ${width} = ${correct} cm²`
-      };
-    }
+const TOPICS = [
+  {
+    key: "ALL_NUMBER",
+    name: "All NUMBER topics (even distribution)",
+    group: "NUMBER",
+    generators: [] // handled specially
+  },
+  { key: "REV_PERCENT", name: "Reverse percentages", group: "NUMBER", generators: [qReversePercentMoney, qReversePercentNonMoney] },
+  { key: "PERCENT_CHANGE", name: "Percentage change", group: "NUMBER", generators: [qPercentChange] },
+  { key: "RATIO_SIMPLIFY", name: "Ratio simplification", group: "NUMBER", generators: [qRatioSimplify] },
+  { key: "BEST_BUY", name: "Best buy / unit pricing", group: "NUMBER", generators: [qBestBuy] },
+  { key: "FRACTIONS", name: "Fraction calculations", group: "NUMBER", generators: [qFracAddSub, qFracOfAmount, qUnitFractionOfNumber] },
+  { key: "STANDARD_FORM_CALC", name: "Standard form calculations (× and ÷)", group: "NUMBER", generators: [qStdFormMultiply, qStdFormDivide, qStdFormConvert] },
+  { key: "BOUNDS", name: "Bounds (error intervals & bounds of expressions)", group: "NUMBER", generators: [qBoundsRounded, qBoundsUpperLowerCalc] },
+  { key: "INDICES", name: "Powers / indices (superscripts)", group: "NUMBER", generators: [qIndicesEvaluate] },
+  { key: "MEAN", name: "Mean (no recurring decimals)", group: "NUMBER", generators: [qMeanAsFraction] },
+  { key: "MIXED_MULTI_STEP", name: "Mixed multi-step Number questions", group: "NUMBER", generators: [qMultiStepPercentThenFraction, qMultiStepRatioShare, qMultiStepStdFormThenRound] }
+];
 
-    // ---------- Topic pools (for even topic frequency) ----------
-    const pools = {
-      "Number": [makePowersQuestion, makePercentOfAmountQuestion, makeStandardFormQuestion],
-      "Algebra": [makeLinearEquationQuestion],
-      "Geometry & Measure": [makeRectangleAreaQuestion],
-      "Statistics & Probability": [makeMeanQuestion]
-    };
+// Build the “All NUMBER topics” generator set from all NUMBER topics except ALL_NUMBER
+function getNumberTopicsForAll(){
+  return TOPICS.filter(t => t.group === "NUMBER" && t.key !== "ALL_NUMBER");
+}
 
-    function pickFromPool(topic) {
-      const arr = pools[topic];
-      return arr[randInt(0, arr.length - 1)]();
-    }
+/* =========================
+   Even distribution (topic-first selection)
+   ========================= */
 
-    function generateQuestionByTopicSelection(selectedTopic) {
-      if (selectedTopic !== "all") {
-        return pickFromPool(selectedTopic);
-      }
-      // Choose topic uniformly so topics appear evenly
-      const topics = Object.keys(pools);
-      const t = topics[randInt(0, topics.length - 1)];
-      return pickFromPool(t);
-    }
+let topicBag = []; // array of topic keys
+function refillTopicBag(){
+  topicBag = getNumberTopicsForAll().map(t => t.key);
+  shuffle(topicBag);
+}
 
-    // ---------- App wiring ----------
-    let currentQuestion = null;
+function pickTopicEvenly(currentKey){
+  if(currentKey !== "ALL_NUMBER") return currentKey;
+  if(topicBag.length === 0) refillTopicBag();
+  return topicBag.pop();
+}
 
-    const topicSelect = document.getElementById("topicSelect");
-    const newQuestionBtn = document.getElementById("newQuestionBtn");
-    const showSolutionBtn = document.getElementById("showSolutionBtn");
-    const questionTextEl = document.getElementById("questionText");
-    const optionsListEl = document.getElementById("optionsList");
-    const solutionBlockEl = document.getElementById("solutionBlock");
-    const solutionTextEl = document.getElementById("solutionText");
-    const topicTagEl = document.getElementById("topicTag");
-    const skillTagEl = document.getElementById("skillTag");
-    const difficultyTextEl = document.getElementById("difficultyText");
+function getTopicByKey(key){
+  return TOPICS.find(t => t.key === key);
+}
 
-    function renderQuestion(q) {
-      topicTagEl.textContent = q.topic;
-      skillTagEl.textContent = q.skill;
-      difficultyTextEl.textContent = q.difficulty;
+/* =========================
+   App state + UI
+   ========================= */
 
-      questionTextEl.innerHTML = q.questionHTML;
+const topicSelect = document.getElementById("topicSelect");
+const topicCountPill = document.getElementById("topicCountPill");
+const btnNew = document.getElementById("btnNew");
+const btnShow = document.getElementById("btnShow");
+const btnHide = document.getElementById("btnHide");
+const qText = document.getElementById("qText");
+const aText = document.getElementById("aText");
+const metaTopic = document.getElementById("metaTopic");
+const metaID = document.getElementById("metaID");
 
-      optionsListEl.innerHTML = "";
-      const labels = ["A", "B", "C", "D"];
-      q.optionsHTML.forEach((opt, index) => {
-        const li = document.createElement("li");
-        li.innerHTML = `<span class="option-label">${labels[index]}.</span> ${opt}`;
-        optionsListEl.appendChild(li);
-      });
+let current = null; // {topicName, id, q, a}
 
-      solutionTextEl.innerHTML = q.solutionHTML;
-      solutionBlockEl.style.display = "none";
-    }
+function renderTopicOptions(){
+  topicSelect.innerHTML = "";
+  for(const t of TOPICS){
+    const opt = document.createElement("option");
+    opt.value = t.key;
+    opt.textContent = t.name;
+    topicSelect.appendChild(opt);
+  }
+  topicCountPill.textContent = `${getNumberTopicsForAll().length} NUMBER topics`;
+}
 
-    function generateQuestion() {
-      const chosenTopic = topicSelect.value;
-      currentQuestion = generateQuestionByTopicSelection(chosenTopic);
-      renderQuestion(currentQuestion);
-    }
+function hideAnswer(){
+  aText.style.display = "none";
+  btnHide.disabled = true;
+  btnShow.disabled = false;
+}
 
-    newQuestionBtn.addEventListener("click", generateQuestion);
-    showSolutionBtn.addEventListener("click", () => { if (currentQuestion) solutionBlockEl.style.display = "block"; });
-  </script>
+function showAnswer(){
+  if(!current) return;
+  aText.style.display = "block";
+  btnHide.disabled = false;
+  btnShow.disabled = true;
+}
+
+function newQuestion(){
+  hideAnswer();
+
+  const selected = topicSelect.value;
+  const pickedTopicKey = pickTopicEvenly(selected);
+  const topic = getTopicByKey(pickedTopicKey);
+
+  if(!topic || !topic.generators || topic.generators.length === 0){
+    qText.textContent = "No questions available for this topic yet.";
+    aText.textContent = "";
+    metaTopic.textContent = "Topic: —";
+    metaID.textContent = "ID: —";
+    current = null;
+    return;
+  }
+
+  const gen = choice(topic.generators);
+  const item = gen();
+
+  current = {
+    topicName: topic.name,
+    id: item.id,
+    q: item.q,
+    a: item.a
+  };
+
+  qText.textContent = current.q;
+  aText.textContent = current.a;
+
+  metaTopic.textContent = `Topic: ${current.topicName}`;
+  metaID.textContent = `ID: ${current.id}`;
+}
+
+btnNew.addEventListener("click", newQuestion);
+btnShow.addEventListener("click", showAnswer);
+btnHide.addEventListener("click", hideAnswer);
+
+// If switching to ALL_NUMBER, reset bag to keep distribution clean
+topicSelect.addEventListener("change", () => {
+  hideAnswer();
+  if(topicSelect.value === "ALL_NUMBER"){
+    refillTopicBag();
+  }
+});
+
+renderTopicOptions();
+refillTopicBag();
+</script>
 </body>
 </html>
