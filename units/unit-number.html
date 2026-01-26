@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
   <meta charset="UTF-8">
   <title>Number – GCSE Intermediate</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <style>
     body {
@@ -16,14 +17,26 @@
       max-width: 800px;
       margin: auto;
       background: #ffffff;
-      padding: 24px 28px;
+      padding: 28px;
       border-radius: 8px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     }
 
+    h1 {
+      margin-top: 0;
+      color: #134b9b;
+    }
+
     .question {
       font-weight: 600;
-      margin-bottom: 12px;
+      margin-top: 24px;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      cursor: pointer;
     }
 
     .solution {
@@ -33,13 +46,6 @@
       background: #eef3ff;
       border-left: 4px solid #3b5bdb;
     }
-
-    button {
-      margin-top: 10px;
-      padding: 6px 12px;
-      font-size: 0.9rem;
-      cursor: pointer;
-    }
   </style>
 </head>
 
@@ -48,28 +54,36 @@
     <h1>Number</h1>
 
     <div class="question">
-      Question: Evaluate 7 × 8
+      Question 1: Evaluate 7 × 8
     </div>
-
-    <button onclick="toggleSolution()">Show solution</button>
-
-    <div id="solution" class="solution">
+    <button onclick="toggleSolution('sol1')">Show solution</button>
+    <div id="sol1" class="solution">
       <strong>Solution:</strong><br>
       7 × 8 = 56
     </div>
+
+    <div class="question">
+      Question 2: Evaluate 6 × 9
+    </div>
+    <button onclick="toggleSolution('sol2')">Show solution</button>
+    <div id="sol2" class="solution">
+      <strong>Solution:</strong><br>
+      6 × 9 = 54
+    </div>
+
   </div>
 
   <script>
-    function toggleSolution() {
-      const sol = document.getElementById("solution");
+    function toggleSolution(id) {
+      const sol = document.getElementById(id);
       const btn = event.target;
 
-      if (sol.style.display === "none") {
-        sol.style.display = "block";
-        btn.textContent = "Hide solution";
-      } else {
+      if (sol.style.display === "block") {
         sol.style.display = "none";
         btn.textContent = "Show solution";
+      } else {
+        sol.style.display = "block";
+        btn.textContent = "Hide solution";
       }
     }
   </script>
